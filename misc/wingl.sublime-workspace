@@ -1,0 +1,1688 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"til",
+				"tile_h"
+			],
+			[
+				"tile",
+				"tile_w"
+			],
+			[
+				"tween",
+				"tween_count"
+			],
+			[
+				"allo",
+				"alloc_array"
+			],
+			[
+				"twee",
+				"tween_count"
+			],
+			[
+				"tiles",
+				"tiles_x"
+			],
+			[
+				"r",
+				"r_held"
+			],
+			[
+				"l",
+				"l_held"
+			],
+			[
+				"ch",
+				"charging"
+			],
+			[
+				"charg",
+				"charging"
+			],
+			[
+				"char",
+				"charging"
+			],
+			[
+				"u_",
+				"u_down"
+			],
+			[
+				"cha",
+				"charge"
+			],
+			[
+				"ke",
+				"key_code"
+			],
+			[
+				"chag",
+				"charging"
+			],
+			[
+				"tar",
+				"target_pos"
+			],
+			[
+				"dir",
+				"dir"
+			],
+			[
+				"Ve",
+				"Vec2i"
+			],
+			[
+				"pla",
+				"player"
+			],
+			[
+				"max",
+				"max_charge"
+			],
+			[
+				"Vec",
+				"Vec2i"
+			],
+			[
+				"tiles_",
+				"tiles_y"
+			],
+			[
+				"play",
+				"player"
+			],
+			[
+				"charge",
+				"charge_rate"
+			],
+			[
+				"ti",
+				"tiles_x"
+			],
+			[
+				"pos",
+				"pos"
+			],
+			[
+				"pl",
+				"player"
+			],
+			[
+				"he",
+				"held"
+			],
+			[
+				"cell",
+				"cells_y"
+			],
+			[
+				"loo",
+				"loops"
+			],
+			[
+				"po",
+				"pos"
+			],
+			[
+				"p",
+				"pos"
+			],
+			[
+				"cell_",
+				"cell_h"
+			],
+			[
+				"e",
+				"enemy"
+			],
+			[
+				"en",
+				"enemy"
+			],
+			[
+				"p_",
+				"p_col"
+			],
+			[
+				"cel",
+				"cell_w"
+			],
+			[
+				"cells",
+				"cells_y"
+			],
+			[
+				"cells_",
+				"cells_x"
+			],
+			[
+				"Rel",
+				"RELEASED"
+			],
+			[
+				"in",
+				"input"
+			],
+			[
+				"cl",
+				"clamp"
+			],
+			[
+				"gr",
+				"growth"
+			],
+			[
+				"de",
+				"decay"
+			],
+			[
+				"min",
+				"miny"
+			],
+			[
+				"half",
+				"half_life_fraction"
+			],
+			[
+				"h",
+				"half_life"
+			],
+			[
+				"hel",
+				"half_life_fraction"
+			],
+			[
+				"mem",
+				"memory"
+			],
+			[
+				"up",
+				"upper_limit"
+			],
+			[
+				"lo",
+				"lower_limit"
+			],
+			[
+				"st",
+				"state"
+			],
+			[
+				"ne",
+				"neighbour_life"
+			],
+			[
+				"B",
+				"ButtonState"
+			],
+			[
+				"cels",
+				"cells_y"
+			],
+			[
+				"lef",
+				"life"
+			],
+			[
+				"mo",
+				"mouse_rect"
+			],
+			[
+				"mou",
+				"mouse_rect"
+			],
+			[
+				"mouse",
+				"mouse_rect"
+			],
+			[
+				"rou",
+				"round_to_u32"
+			],
+			[
+				"all",
+				"alloc_array"
+			],
+			[
+				"zer",
+				"zero_bytes"
+			],
+			[
+				"alive",
+				"alive_count"
+			],
+			[
+				"al",
+				"alive_count"
+			],
+			[
+				"app",
+				"app_time"
+			],
+			[
+				"app_",
+				"app_state"
+			],
+			[
+				"pi",
+				"pixel_buffer"
+			],
+			[
+				"by",
+				"bytes_per_pixel"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"pixel",
+				"pixel_buffer"
+			],
+			[
+				"pix",
+				"pixel_buffer"
+			],
+			[
+				"w",
+				"width"
+			],
+			[
+				"view",
+				"view_width"
+			],
+			[
+				"frame",
+				"frame_buffer"
+			],
+			[
+				"pixel_",
+				"pixel_buffer"
+			],
+			[
+				"GL_US",
+				"GL_UNSIGNED_BYTE"
+			],
+			[
+				"glBuffer",
+				"glBufferSubImage2D"
+			],
+			[
+				"size",
+				"sizeof"
+			],
+			[
+				"GLNEA",
+				"GL_NEAREST"
+			],
+			[
+				"fra",
+				"frame_pixels"
+			],
+			[
+				"inde",
+				"index_count"
+			],
+			[
+				"bin",
+				"bind_mesh"
+			],
+			[
+				"glFrame",
+				"glCheckFramebufferStatus"
+			],
+			[
+				"glFr",
+				"glFramebufferTexture2D"
+			],
+			[
+				"GL_F",
+				"GL_FUNC"
+			],
+			[
+				"GL_RA",
+				"GL_RGBA"
+			],
+			[
+				"vert",
+				"vertex_count"
+			],
+			[
+				"ind",
+				"indices"
+			],
+			[
+				"ve",
+				"vertex_bytes"
+			],
+			[
+				"uv",
+				"uv_bytes"
+			],
+			[
+				"col",
+				"col_bytes"
+			],
+			[
+				"ver",
+				"vertex_count"
+			],
+			[
+				"index",
+				"index_bytes"
+			],
+			[
+				"ps",
+				"push_bytes"
+			],
+			[
+				"WIN",
+				"WIN_REGISTER_SUCCESS"
+			],
+			[
+				"tra",
+				"transient_storage"
+			],
+			[
+				"Mem",
+				"MemBlock"
+			],
+			[
+				"GL_UN",
+				"GL_UNSIGNED_SHORT"
+			],
+			[
+				"render",
+				"render_state"
+			],
+			[
+				"Rend",
+				"render_state"
+			],
+			[
+				"ren",
+				"render_state"
+			],
+			[
+				"per",
+				"persistant_storage"
+			],
+			[
+				"wra",
+				"wrap_y"
+			],
+			[
+				"wrap",
+				"wrap_x"
+			],
+			[
+				"wr",
+				"wrap_y"
+			],
+			[
+				"dow",
+				"down_filter"
+			],
+			[
+				"norm",
+				"normalized"
+			],
+			[
+				"a",
+				"attrib_size"
+			],
+			[
+				"at",
+				"attrib_type"
+			],
+			[
+				"mes",
+				"mesh_attribute"
+			],
+			[
+				"GL_A",
+				"GL_ACTIVE_ATTRIBUTES"
+			],
+			[
+				"att",
+				"attrib_type"
+			],
+			[
+				"posii",
+				"positions"
+			],
+			[
+				"V",
+				"Vec2"
+			],
+			[
+				"no",
+				"normal_layer_count"
+			],
+			[
+				"vertex",
+				"vertex_bytes"
+			],
+			[
+				"mesh",
+				"mesh_bytes"
+			],
+			[
+				"m",
+				"memory"
+			],
+			[
+				"glVer",
+				"glVertexAttribPointer"
+			],
+			[
+				"glVe",
+				"glVertexAttribPointer"
+			],
+			[
+				"Me",
+				"MemSize"
+			],
+			[
+				"con",
+				"contents"
+			],
+			[
+				"shad",
+				"shader_program"
+			],
+			[
+				"frag",
+				"frag_source"
+			],
+			[
+				"GL",
+				"GL_TRIANGLES"
+			],
+			[
+				"glDr",
+				"glDrawElements"
+			],
+			[
+				"AR",
+				"ARRAY_COUNT"
+			],
+			[
+				"glBin",
+				"glBindVertexArray"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/winGL/code/app.cpp",
+			"settings":
+			{
+				"buffer_size": 7797,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/winGL/code/win32_platform_layer.cpp",
+			"settings":
+			{
+				"buffer_size": 9402,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/winGL/code/collision.cpp",
+			"settings":
+			{
+				"buffer_size": 2955,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/winGL/code/math.cpp",
+			"settings":
+			{
+				"buffer_size": 1331,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/winGL/code/intrinsics.h",
+			"settings":
+			{
+				"buffer_size": 1625,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/winGL/code/renderer.cpp",
+			"settings":
+			{
+				"buffer_size": 5673,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/winGL/code/anim.cpp",
+			"settings":
+			{
+				"buffer_size": 854,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "win32_platform_layer.cpp\n[Finished in 1.0s]",
+			"settings":
+			{
+				"buffer_size": 43,
+				"line_ending": "Windows",
+				"name": "Build output",
+				"scratch": true
+			}
+		}
+	],
+	"build_system": "Packages/User/CPP.sublime-build",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: list",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"da",
+				"DataConverter: to Python dict"
+			],
+			[
+				"data",
+				"DataConverter: to JSON"
+			],
+			[
+				"preyy",
+				"Pretty JSON: Minify (compress) JSON"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: i",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 456.0
+	},
+	"console":
+	{
+		"height": 125.0,
+		"history":
+		[
+			"import urllib.request,os; pr='Preferences.sublime-settings'; ip='ignored_packages'; n='Package Control'; s=sublime.load_settings(pr); ig=s.get(ip); ig.append(n); s.set(ip,ig); sublime.save_settings('Preferences.sublime-settings'); pf=n+'.sublime-package'; urllib.request.install_opener(urllib.request.build_opener(urllib.request.ProxyHandler())); by=urllib.request.urlopen('https://packagecontrol.io/'+pf.replace(' ','%20')).read(); open(os.path.join(sublime.installed_packages_path(),pf),'wb').write(by); ig.remove(n); s.set(ip,ig); sublime.save_settings(pr); print('Package Control: 3.0.0 upgrade successful!')",
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/winGL"
+	],
+	"file_history":
+	[
+		"/C/winGL/code/win32_opengl.cpp",
+		"/C/winGL/code/input.cpp",
+		"/C/winGL/code/win32_fileio.cpp",
+		"/C/winGL/data/frame.frag",
+		"/C/winGL/code/win32_platform_layer.cpp",
+		"/C/winGL/code/wglext.h",
+		"/C/winGL/code/vec_types.h",
+		"/C/winGL/code/vec3.cpp",
+		"/C/winGL/code/vec2i.cpp",
+		"/C/winGL/code/vec2.cpp",
+		"/C/winGL/code/typedefs.h",
+		"/C/winGL/code/stb_image.h",
+		"/C/winGL/code/quat.cpp",
+		"/C/winGL/code/memory.cpp",
+		"/C/winGL/code/mat4.cpp",
+		"/C/winGL/code/mat3.cpp",
+		"/C/winGL/code/glext.h",
+		"/C/winGL/code/draw.cpp",
+		"/C/winGL/code/compilers.h",
+		"/C/winGL/code/bezier.cpp",
+		"/C/winGL/build/win32_source_map.map",
+		"/C/winGL/archive/app-230315.cpp",
+		"/C/winGL/archive/app-220315.cpp",
+		"/C/winGL/archive/app-210315.cpp",
+		"/C/winGL/archive/app-060315.cpp",
+		"/C/winGL/archive/app-050315.cpp",
+		"/C/winGL/misc/build.bat",
+		"/C/winGL/code/renderer.cpp",
+		"/C/winGL/code/math.cpp",
+		"/C/winGL/code/anim.cpp",
+		"/C/winGL/misc/wingl.sublime-project",
+		"/C/winGL/code/collision.cpp",
+		"/C/winGL/misc/win32_platform_layer.sln",
+		"/C/winGL/code/intrinsics.h",
+		"/C/winGL/data/frame.vert",
+		"/C/winGL/data/shader.frag",
+		"/C/winGL/data/shader.vert",
+		"/C/winGL/misc/shell.bat",
+		"/C/Users/Gareth/Desktop/winGL/winGL/code/app.cpp",
+		"/C/winGL/old/app-050315.cpp",
+		"/C/winGL/old/app-060315.cpp",
+		"/C/winGL/code/app.cpp",
+		"/C/winGL/old/app.cpp",
+		"/C/Users/Gareth/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/shell.bat",
+		"/C/handmadehero/code/win32_handmade.cpp",
+		"/C/webdev/vmath/src/mat3.ts",
+		"/C/handmadehero/code/draw.cpp",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/onyx-renderer.cpp",
+		"/C/webdev/onyx-project/onyx/src/ts/meshtools.ts",
+		"/C/handmadehero/code/handmade.cpp",
+		"/C/webdev/onyx-project/onyx/src/ts/texture.ts",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/onyx-texture-importer.cpp",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/assets/shaders/texture.txt",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/onyx-mesh-importer.cpp",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/assets/shaders/flat.txt",
+		"/C/webdev/onyx-project/onyx/src/ts/shader.ts",
+		"/C/winGL/data/shader.vert.cpp",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/onyx-shader-importer.cpp",
+		"/C/webdev/onyx-project/onyx/src/ts/renderer.ts",
+		"/C/webdev/onyx-project/onyx/src/ts/mesh.ts",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/onyx-mesh.cpp",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/onyx-math.h",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/onyx-game.cpp",
+		"/C/handmadehero/code/win32_direct_sound.cpp",
+		"/C/winGL/code/win32_wglext.h",
+		"/C/winGL/code/win32_glext.h",
+		"/C/Users/Gareth/.cargo/git/checkouts/gl-rs-1669fe424cfaeccd/master/deps/khronos-api/GLES/gl.h",
+		"/C/handmadehero/misc/build.bat",
+		"/C/handmadehero/code/win32_xinput.cpp",
+		"/C/Users/Gareth/Documents/Visual Studio 2013/Projects/onyx-engine/onyx-engine/main.cpp",
+		"/C/Users/Gareth/Desktop/design-notes",
+		"/C/webdev/onyx-project/onyx/src/ts/vec3.ts",
+		"/C/handmadehero/code/vec3.cpp",
+		"/C/handmadehero/code/vec2i.cpp",
+		"/C/handmadehero/code/vec_types.h",
+		"/C/handmadehero/build/win32_handmade.map",
+		"/C/handmadehero/code/compilers.h",
+		"/C/handmadehero/code/intrinsics.h",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/SublimeLinter/Default (Windows).sublime-keymap",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Installed Packages/C++11.sublime-package",
+		"/C/handmadehero/code/typedefs.h",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/C++11/C++11.sublime-settings",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/C++11.sublime-settings",
+		"/C/handmadehero/code/vec2.cpp",
+		"/C/handmadehero/code/input.cpp",
+		"/C/handmadehero/code/math.cpp",
+		"/C/handmadehero/code/vecs.cpp",
+		"/C/handmadehero/code/vec3.h",
+		"/C/handmadehero/code/vec2.h",
+		"/C/handmadehero/code/math.h",
+		"/C/c++/Tests/test.cpp",
+		"/C/handmadehero/code/intrinsics.cpp",
+		"/C/handmadehero/misc/handmadehero.sublime-project",
+		"/C/handmadehero/misc/shell.bat",
+		"/C/handmadehero/misc/win32_handmade.sln",
+		"/C/shells/hero.bat",
+		"/C/webdev/markup/markup.js",
+		"/C/Users/Gareth/Desktop/cray-compiled.c",
+		"/C/Users/Gareth/Desktop/cray.c",
+		"/C/webdev/markup/markup.html",
+		"/C/webdev/onyx-web/build/index.html",
+		"/C/webdev/onyx-web/src/ts/logic.ts",
+		"/C/webdev/onyx-web/src/js/index.js",
+		"/C/webdev/onyx-project/onyx/src/ts/onyx.ts",
+		"/C/webdev/onyx-project/onyx/src/ts/logic.ts",
+		"/C/webdev/onyx-project/onyx/src/js/onyx.js",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Handmadehero.bat",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/CPP.sublime-build",
+		"/C/Users/Gareth/Desktop/Handmadehero.bat",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/SublimeLinter.sublime-settings",
+		"/C/Users/Gareth/Desktop/old.cpp",
+		"/C/handmadehero/code/        c:/handmadehero/code/win32_handmade.cpp",
+		"/C/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/IDE/devenv.exe.config",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 2/Packages/C++/C++.sublime-build",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 2/Packages/C++/C++.sublime-settings",
+		"/C/handmadehero/code/build.bat",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 2/Packages/User/CPP.sublime-build",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 2/Packages/User/handmade.sublime-build",
+		"/C/handmadehero/code/typdefs.h",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 2/Packages/Color Scheme - Default/Espresso Libre.tmTheme",
+		"/C/handmadehero/code/handmade.h",
+		"/C/handmadehero/misc/stbuild.sublime-build",
+		"/W/code/win32_handmade.cpp",
+		"/C/handmadehero/code/debug.bat",
+		"/C/handmadehero/code/compile.bat",
+		"/W/misc/shell.bat",
+		"/W/misc/st2.bat"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"global_var",
+			"offset",
+			"GL_UNSIGNED_SHORT",
+			"407",
+			"uvs",
+			"memory",
+			"ARRAY_COUNT",
+			");",
+			",",
+			"GL_FUNC(",
+			");",
+			",",
+			"glgenvertexarrays",
+			"length_sq",
+			"sq_length",
+			"length_sq",
+			"ps2",
+			"pe2",
+			"ps1",
+			"pe1",
+			"float",
+			"\"",
+			"wglGetProcAddress",
+			"\"",
+			"wglGetProcAddress",
+			"ReleaseDC",
+			"GetDC",
+			"OPENGL_MINOR_VERSION",
+			"OPENGL_MAJOR_VERSION",
+			"gl21",
+			"float32",
+			"update_device_buttons",
+			"inline",
+			"Vec2",
+			"uint8",
+			"int32",
+			"float32",
+			"int32",
+			"float32",
+			"int32",
+			"float32",
+			"uint32",
+			"uint8",
+			"int16",
+			"bool32",
+			"float64",
+			"uint64",
+			"float32",
+			"uint8",
+			"float64",
+			"float32",
+			"\"\n",
+			"index",
+			"Vec2",
+			"tile_pos_y",
+			"tile_pos_x",
+			"float32_to_uint32",
+			"float32_to_int32",
+			"int32",
+			"uint8",
+			"uint32",
+			"uint64",
+			"float32",
+			"float32_to_int32",
+			"ButtonInput",
+			"mouse_input",
+			"new_mouse_input",
+			"max_controller_count",
+			"process_keyboard_message",
+			"DEBUG",
+			"game_update",
+			"target_seconds_per_frame",
+			"GAME_UPDATE_HZ",
+			"device_context",
+			"game_update_",
+			"game_update",
+			"display_",
+			"expected_seconds_per_frame",
+			"expected_bytes_per_frame",
+			"end_counter",
+			"audio_latency_seconds",
+			"audio#",
+			"last_counter",
+			"DEBUG_time_marker",
+			"target_se",
+			"target_sceconds",
+			"last_play",
+			"target_seconds_per_frame",
+			"memory",
+			"running_sample_index",
+			"f64",
+			"f32",
+			"global_back_buffer",
+			"game_sound_buffer",
+			"win32_sound_output",
+			"global_sound_buffer",
+			"game_button_state",
+			"assert",
+			"real32",
+			"real64",
+			"real32",
+			"sound_buffer_size",
+			"bool",
+			"sound_buffer",
+			"render_",
+			"get_window_dimensions",
+			"win32_update",
+			"window_rect",
+			"_in_",
+			"php",
+			"TEX_COORD_MAX",
+			"0",
+			"-2",
+			"0",
+			"2",
+			"0",
+			"{",
+			"}",
+			"{",
+			"0.5",
+			"f",
+			"1.0",
+			"0.0",
+			"1.0",
+			"f",
+			")",
+			"}",
+			"new Vector3f ("
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			";",
+			"PROC",
+			"PFN",
+			";",
+			"",
+			"PROC",
+			"sqr_length",
+			"sq_length",
+			"c",
+			"d",
+			"a",
+			"b",
+			"f32",
+			"",
+			"MIN_MINOR_VERSION",
+			"MIN_MAJOR_VERSION",
+			"gl11",
+			"f32",
+			"",
+			"Vec3",
+			"u8",
+			"i32",
+			"f32",
+			"i32",
+			"f32",
+			"u32",
+			"u8",
+			"i16",
+			"b32",
+			"f64",
+			"u64",
+			"f32",
+			"ui8",
+			"f64",
+			"f32",
+			"i",
+			"Vec2i",
+			"Vec3",
+			"player_tile_y",
+			"player_tile_x",
+			"round_to_uint32",
+			"round_to_int32",
+			"i32",
+			"ui8",
+			"ui32",
+			"ui64",
+			"f32",
+			"f32_to_i32",
+			"ButtonState",
+			"mouse",
+			"new_mouse",
+			"max_controllers",
+			"process_key_message",
+			"game_update_hz",
+			"target_seconds_per_frame",
+			"expected_sound_bytes_per_frame",
+			"end_ticks",
+			"last_ticks",
+			"float64",
+			"float32",
+			"global_pixel_buffer",
+			"SoundBuffer",
+			"SoundOutput",
+			"SoundOutpu",
+			"sound_buffer",
+			"ButtonState",
+			"ASSERT",
+			"f32",
+			"f64",
+			"f32",
+			"buffer_size",
+			"bool32",
+			"win32_get_window_dimensions",
+			"client_rect",
+			"",
+			"1",
+			"-z",
+			"z",
+			"-z",
+			"z",
+			"-z",
+			"",
+			"z",
+			"",
+			"1",
+			"0",
+			"z",
+			"",
+			"1",
+			"0",
+			"1",
+			"",
+			"0",
+			"n",
+			"1",
+			"-1",
+			"1",
+			"0.5",
+			"Mat3",
+			"b",
+			"a",
+			"",
+			"m",
+			"r.m",
+			"d",
+			"r.m",
+			"m",
+			"r.m",
+			"d",
+			"controls",
+			"light",
+			"camera",
+			"inv_wavelength",
+			"ray",
+			"start",
+			"camera",
+			"ATMOSPHERE",
+			"AVG_DENSITY",
+			"surface",
+			"inv_wavelength",
+			"AVG_DENSITY",
+			"SUN",
+			"light_angle",
+			"cam_angle",
+			"sample_length",
+			"ATMOSPHERE",
+			"GROUND",
+			"sample_ray"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/winGL/code/app.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7797,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4743,
+								4743
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3705.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/winGL/code/win32_platform_layer.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9402,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4545,
+								4545
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3371.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/winGL/code/collision.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2955,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1072,
+								1072
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 719.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/winGL/code/math.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1331,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								31,
+								40
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/winGL/code/intrinsics.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1625,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								560,
+								560
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C Improved/C Improved.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 489.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/winGL/code/renderer.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5673,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1097,
+								1097
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 804.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/C/winGL/code/anim.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 854,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								717,
+								717
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 261.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 7,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 43,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								43,
+								43
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.689604685212,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 114.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "wingl.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"open",
+				"code\\win32_opengl.cpp"
+			],
+			[
+				"win",
+				"code\\win32_fileio.cpp"
+			],
+			[
+				"",
+				"code\\win32_platform_layer.cpp"
+			],
+			[
+				"col",
+				"code\\collision.cpp"
+			],
+			[
+				"render",
+				"code\\renderer.cpp"
+			],
+			[
+				"int",
+				"code\\intrinsics.h"
+			],
+			[
+				"ma",
+				"code\\math.cpp"
+			],
+			[
+				"be",
+				"code\\bezier.cpp"
+			],
+			[
+				"anm",
+				"code\\anim.cpp"
+			],
+			[
+				"ty",
+				"code\\typedefs.h"
+			],
+			[
+				"mem",
+				"code\\memory.cpp"
+			],
+			[
+				"pla",
+				"code\\win32_platform_layer.cpp"
+			],
+			[
+				"draw",
+				"code\\draw.cpp"
+			],
+			[
+				"vec",
+				"code\\vec_types.h"
+			],
+			[
+				"type",
+				"code\\typedefs.h"
+			],
+			[
+				"anim",
+				"code\\anim.cpp"
+			],
+			[
+				"vec2",
+				"code\\vec2i.cpp"
+			],
+			[
+				"win32",
+				"code\\win32_platform_layer.cpp"
+			],
+			[
+				"math",
+				"code\\math.cpp"
+			],
+			[
+				"inpu",
+				"code\\input.cpp"
+			],
+			[
+				"in",
+				"code\\input.cpp"
+			],
+			[
+				"inp",
+				"code\\input.cpp"
+			],
+			[
+				"app",
+				"code\\app.cpp"
+			],
+			[
+				"ve",
+				"code\\vec_types.h"
+			],
+			[
+				"ba",
+				"misc\\shell.bat"
+			],
+			[
+				"bat",
+				"misc\\build.bat"
+			],
+			[
+				"coll",
+				"code\\collision.cpp"
+			],
+			[
+				"v",
+				"code\\vec3.cpp"
+			],
+			[
+				"typ",
+				"code\\typedefs.h"
+			],
+			[
+				"quat",
+				"code\\quat.cpp"
+			],
+			[
+				"qu",
+				"code\\quat.cpp"
+			],
+			[
+				"mat",
+				"code\\mat4.cpp"
+			],
+			[
+				"fra",
+				"data\\shader.frag"
+			],
+			[
+				"vert",
+				"data\\shader.vert"
+			],
+			[
+				"stb",
+				"code\\stb_image.h"
+			],
+			[
+				"bui",
+				"misc\\build.bat"
+			],
+			[
+				"types",
+				"code\\typedefs.h"
+			],
+			[
+				"sh",
+				"data\\shader.frag"
+			],
+			[
+				"shader",
+				"data\\shader.vert"
+			],
+			[
+				"shad",
+				"data\\shader.frag"
+			],
+			[
+				"sad",
+				"data\\shader.frag"
+			],
+			[
+				"t",
+				"code\\vec_types.h"
+			],
+			[
+				"ver",
+				"data\\shader.vert"
+			],
+			[
+				"file",
+				"code\\win32_fileio.cpp"
+			],
+			[
+				"gl",
+				"code\\win32_opengl.cpp"
+			],
+			[
+				"qua",
+				"code\\quat.cpp"
+			],
+			[
+				"m",
+				"code\\math.cpp"
+			],
+			[
+				"glex",
+				"code\\win32_glext.h"
+			],
+			[
+				"it",
+				"code\\intrinsics.h"
+			],
+			[
+				"vec3",
+				"code\\vec3.cpp"
+			],
+			[
+				"hand",
+				"code\\handmade.cpp"
+			],
+			[
+				"dir",
+				"code\\win32_direct_sound.cpp"
+			],
+			[
+				"xin",
+				"code\\win32_xinput.cpp"
+			],
+			[
+				"d",
+				"code\\draw.cpp"
+			],
+			[
+				"ci",
+				"code\\compilers.h"
+			],
+			[
+				".h",
+				"code\\typedefs.h"
+			],
+			[
+				"bu",
+				"misc\\build.bat"
+			],
+			[
+				"han",
+				"code\\handmade.cpp"
+			],
+			[
+				"sou",
+				"code\\win32_direct_sound.cpp"
+			],
+			[
+				"xi",
+				"code\\win32_xinput.cpp"
+			],
+			[
+				"buil",
+				"misc\\build.bat"
+			],
+			[
+				"wi32",
+				"code\\win32_handmade.cpp"
+			],
+			[
+				"shell",
+				"misc\\shell.bat"
+			],
+			[
+				"b",
+				"misc\\build.bat"
+			],
+			[
+				"build",
+				"code/build.bat"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"C:\\webdev\\vmath\\vmath.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 162.0,
+	"status_bar_visible": false,
+	"template_settings":
+	{
+	}
+}

@@ -72,32 +72,31 @@ namespace input
 		AnalogueInput delta;
 	};
 
-	struct Input
+	struct Devices
 	{
-		//Joypad joypads[4];
 		Keyboard keyboard;
 		Mouse mouse;
 	};
 
 
-	internal b32
+	fn b32
 	up(ButtonState state)
 	{
 		return state == ButtonState::UP;
 	}
-	internal b32
+	fn b32
 	down(ButtonState state)
 	{
 		return state == ButtonState::DOWN;
 	}
 
-	internal b32
+	fn b32
 	held(ButtonState state)
 	{
 		return (state == ButtonState::DOWN || state == ButtonState::HELD);
 	}
 
-	internal b32
+	fn b32
 	released(ButtonState state)
 	{
 		return (state == ButtonState::RELEASED || state == ButtonState::UP);

@@ -1,6 +1,3 @@
-#ifndef VEC_TYPES_H
-#define VEC_TYPES_H
-
 struct Vec2
 {
 	f32 x, y;
@@ -39,8 +36,10 @@ struct AngleAxis
 
 struct Rect
 {
-	Vec2 min;
-	Vec2 max;
+	f32 x;
+	f32 y;
+	f32 width;
+	f32 height;
 };
 
 struct Quat
@@ -55,7 +54,7 @@ struct Quat
 
 struct Bezier
 {
-	Vec2 a, b, c, d;
+	Vec3 a, b, c, d;
 };
 
 struct Mat3
@@ -82,21 +81,24 @@ struct Ray
 	Vec3 dir;
 };
 
+struct Line
+{
+	Vec3 start;
+	Vec3 end;
+};
+
 struct AABB
 {
 	Vec3 min;
 	Vec3 max;
 };
 
-struct Color
+struct RGBA
 {
 	f32 r, g, b, a;
 };
 
-struct RGB
+struct RGB8
 {
 	u8 r, g, b;
 };
-
-
-#endif

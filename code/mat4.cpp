@@ -60,7 +60,7 @@ namespace mat4
 	}
 
 	internal Mat4
-	transpose(Mat4 m)
+	transposed(Mat4 m)
 	{
 		Mat4 r;
 
@@ -140,33 +140,32 @@ namespace mat4
 	internal Mat4
 	inverse_affine(Mat4 m)
 	{
-		Mat4 r;
-
 		f32 t0 = m[10] * m[5] - m[ 6] * m[9];
 		f32 t1 = m[ 2] * m[9] - m[10] * m[1];
 		f32 t2 = m[ 6] * m[1] - m[ 2] * m[5];
 
-		f32 inv_det = 1.0f / (m[0] * t0 + m[4] * t1 + m[8] * t2);
+		f32 idet = 1.0f / (m[0] * t0 + m[4] * t1 + m[8] * t2);
 
-		t0 *= inv_det;
-		t1 *= inv_det;
-		t2 *= inv_det;
+		t0 *= idet;
+		t1 *= idet;
+		t2 *= idet;
 
-		m.m[0] *= inv_det;
-		m.m[4] *= inv_det;
-		m.m[8] *= inv_det;
+		f32 v0 = m[0] * idet;
+		f32 v4 = m[4] * idet;
+		f32 v8 = m[8] * idet;
 
+		Mat4 r;
 		r.m[ 0] = t0; 
 		r.m[ 1] = t1; 
 		r.m[ 2] = t2;
 		r.m[ 3] = 0.0f;
-		r.m[ 4] = m[8] * m[ 6] - m[4] * m[10];
-		r.m[ 5] = m[0] * m[10] - m[8] * m[2];
-		r.m[ 6] = m[4] * m[ 2] - m[0] * m[6];
+		r.m[ 4] = v8 * m[ 6] - v4 * m[10];
+		r.m[ 5] = v0 * m[10] - v8 * m[ 2];
+		r.m[ 6] = v4 * m[ 2] - v0 * m[ 6];
 		r.m[ 7] = 0.0f;
-		r.m[ 8] = m[4] * m[9] - m[8] * m[5];
-		r.m[ 9] = m[8] * m[1] - m[0] * m[9];
-		r.m[10] = m[0] * m[5] - m[4] * m[1];
+		r.m[ 8] = v4 * m[9] - v8 * m[5];
+		r.m[ 9] = v8 * m[1] - v0 * m[9];
+		r.m[10] = v0 * m[5] - v4 * m[1];
 		r.m[11] = 0.0f;
 		r.m[12] = -(r[0] * m[12] + r[4] * m[13] + r[ 8] * m[14]);
 		r.m[13] = -(r[1] * m[12] + r[5] * m[13] + r[ 9] * m[14]);
@@ -187,7 +186,7 @@ namespace mat4
 	internal Vec3
 	get_position(Mat4 m)
 	{
-		return { m.m[12], m.m[13], m.m[14] };
+		return { m[12], m[13], m.m[14] };
 	}
 
 	internal void 
@@ -239,7 +238,7 @@ namespace mat4
 	}
 
 	internal Quat
-	get_rotation(Mat4& m)
+	get_rotation(Mat4 m)
 	{
 		Quat q;
 		f32 t;
@@ -310,4 +309,5 @@ namespace mat4
 			(m[2] * p.x + m[6] * p.y + m[10] * p.z + m[14]) * d
 		};
 	}
+
 }

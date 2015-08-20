@@ -2,6 +2,8 @@
 #include "glext.h"
 #include "wglext.h"
 
+using namespace renderer;
+
 namespace opengl
 {
 	#define GL_FUNC(type, name) name = (PFN##type##PROC)wglGetProcAddress(#name);
@@ -71,14 +73,14 @@ namespace opengl
 	{
 		ThreadContext* thread;
 		HDC device_context;
-		app::renderer::Mesh* mesh;
+		renderer::Mesh* mesh;
 		GLuint frame_buffer;
 		GLuint frame_shader;
 		GLuint frame_texture;
 	};
 
 
-	internal GLuint
+	fn GLuint
 	create_shader(const char* vert_source, const char* frag_source)
 	{
 		GLuint vert_shader = glCreateShader(GL_VERTEX_SHADER); 
@@ -113,7 +115,8 @@ namespace opengl
 		return program;
 	}
 
-	internal void bind_mesh(app::renderer::Mesh* m)
+	fn void 
+	bind_mesh(renderer::Mesh* m) //try without ns and *
 	{
 		glGenVertexArrays(1, &m->vao);
 		glGenBuffers(1, &m->vbo);
@@ -124,11 +127,12 @@ namespace opengl
 		ASSERT(m->ibo != 0);
 	}
 
-	internal void update_mesh(app::renderer::Mesh* m)
+	fn void 
+	update_mesh(renderer::Mesh* m)
 	{
-		memsize pos_bytes = sizeof(app::Vec3) * m->vertex_count;
-		memsize uv_bytes = sizeof(app::Vec2) * m->vertex_count;
-		memsize col_bytes = sizeof(app::Color) * m->vertex_count;
+		memsize pos_bytes = sizeof(Vec3) * m->vertex_count;
+		memsize uv_bytes = sizeof(Vec2) * m->vertex_count;
+		memsize col_bytes = sizeof(RGBA) * m->vertex_count;
 		memsize index_bytes = sizeof(u16) * m->index_count;
 		memsize vertex_bytes = pos_bytes + uv_bytes + col_bytes;
 		memsize offset = 0;
@@ -166,8 +170,8 @@ namespace opengl
 	}
 
 
-	internal HGLRC
-	create_context(MemBlock* memory, State* state, app::renderer::PixelBuffer* pixel_buffer)
+	fn HGLRC
+	create_context(memory::Block& storage, State& state, PixelBuffer& pb)
 	{
 		PIXELFORMATDESCRIPTOR pfd = {};
 
@@ -179,19 +183,19 @@ namespace opengl
 		pfd.cDepthBits = 32;
 		pfd.cStencilBits = 8;
 
-		auto pixel_format = ChoosePixelFormat(state->device_context, &pfd); 
+		auto pixel_format = ChoosePixelFormat(state.device_context, &pfd); 
 		ASSERT(pixel_format && "Could not choose pixel format");
 		
-		if(!SetPixelFormat(state->device_context, pixel_format, &pfd))
+		if(!SetPixelFormat(state.device_context, pixel_format, &pfd))
 		{
 			ASSERT(!"Could not set pixel format");
 		}
 
 		// windows only returns the old opengl 1.2 context natively
-		auto gl11 = wglCreateContext(state->device_context); 
+		auto gl11 = wglCreateContext(state.device_context); 
 		ASSERT(gl11 && "Could not create opengl 1.1 context");
 		
-		if(!wglMakeCurrent(state->device_context, gl11))
+		if(!wglMakeCurrent(state.device_context, gl11))
 		{
 			ASSERT(!"Could not set temp context");
 		}
@@ -286,7 +290,7 @@ namespace opengl
 		    0,0
 		};
 
-		HGLRC gl = wglCreateContextAttribsARB(state->device_context, 0, attributes);
+		HGLRC gl = wglCreateContextAttribsARB(state.device_context, 0, attributes);
 		ASSERT(gl && "Could not create ARB context");
 		
 
@@ -295,7 +299,7 @@ namespace opengl
 		wglDeleteContext(gl11);
 
 		// bind the up to date opengl context
-		if(!wglMakeCurrent(state->device_context, gl))
+		if(!wglMakeCurrent(state.device_context, gl))
 		{
 			ASSERT(!"Could not make device")
 		}
@@ -326,14 +330,14 @@ namespace opengl
 		// MESH DATA
 
 		
-		app::Vec3 verts[] = 
+		Vec3 verts[] = 
 		{ 
 			{ -1.0f, -1.0f, 0.0f },
 			{  1.0f, -1.0f, 0.0f },
 			{ -1.0f,  1.0f, 0.0f },
 			{  1.0f,  1.0f, 0.0f }
 		};
-		app::Vec2 uvs[] = 
+		Vec2 uvs[] = 
 		{
 			{ 0.0f, 1.0f },
 			{ 1.0f, 1.0f },
@@ -360,29 +364,29 @@ namespace opengl
 			0,1,3,0,3,2
 		};
 
-		state->mesh = alloc_struct(memory, app::renderer::Mesh);
-		state->mesh->vertex_count = ARRAY_COUNT(verts);
-		state->mesh->index_count = ARRAY_COUNT(indices);
+		state.mesh = alloc_struct(storage, Mesh);
+		state.mesh->vertex_count = ARRAY_COUNT(verts);
+		state.mesh->index_count = ARRAY_COUNT(indices);
 
-		memsize pos_bytes = sizeof(app::Vec3) * state->mesh->vertex_count;
-		memsize uv_bytes = sizeof(app::Vec2) * state->mesh->vertex_count;
-		//memsize col_bytes = sizeof(app::Color) * state->mesh->vertex_count;
-		memsize index_bytes = sizeof(u16) * state->mesh->index_count;
+		memsize pos_bytes = sizeof(Vec3) * state.mesh->vertex_count;
+		memsize uv_bytes = sizeof(Vec2) * state.mesh->vertex_count;
+		//memsize col_bytes = sizeof(Color) * state->mesh->vertex_count;
+		memsize index_bytes = sizeof(u16) * state.mesh->index_count;
 		memsize vertex_bytes = pos_bytes + uv_bytes;// + col_bytes;
 
-		state->mesh->memory = alloc_bytes(memory, vertex_bytes);
-		u8* offset = (u8*)state->mesh->memory;
+		state.mesh->memory = memory::alloc(storage, vertex_bytes);
+		u8* offset = (u8*)state.mesh->memory;
 
 		// POSITIONS 
 
-		state->mesh->positions = (app::Vec3*)offset;
-		mem_copy(verts, state->mesh->positions, pos_bytes);
+		state.mesh->positions = (Vec3*)offset;
+		memory::copy(verts, state.mesh->positions, pos_bytes);
 		offset += pos_bytes;
 
 		// UV1
 
-		state->mesh->uvs = (app::Vec2*)offset;
-		mem_copy(uvs, state->mesh->uvs, uv_bytes);
+		state.mesh->uvs = (Vec2*)offset;
+		memory::copy(uvs, state.mesh->uvs, uv_bytes);
 		offset += uv_bytes;
 		
 		// UV2
@@ -398,16 +402,16 @@ namespace opengl
 		
 		// INDICES
 
-		state->mesh->indices = (u16*)offset;
-		mem_copy(indices, state->mesh->indices, index_bytes);
+		state.mesh->indices = (u16*)offset;
+		memory::copy(indices, state.mesh->indices, index_bytes);
 
 		// BIND MESH
 
-		bind_mesh(state->mesh);
+		bind_mesh(state.mesh);
 
 		// UPDATE MESH
 
-		update_mesh(state->mesh);
+		update_mesh(state.mesh);
 
 		/*
 		int width, height, bit_depth;
@@ -452,23 +456,23 @@ namespace opengl
 		*/
 
 		// FRAME BUFFER SHADER
-		state->frame_shader = 0;
+		state.frame_shader = 0;
 		{
-			auto vert_file = DEBUG_read_file(state->thread, "..\\data\\frame.vert");
+			auto vert_file = DEBUG_read_file(state.thread, "..\\data\\frame.vert");
 			auto vert_source = (const char*)vert_file.contents;
 
-			auto frag_file = DEBUG_read_file(state->thread, "..\\data\\frame.frag");
+			auto frag_file = DEBUG_read_file(state.thread, "..\\data\\frame.frag");
 			auto frag_source = (const char*)frag_file.contents;
-			state->frame_shader = create_shader(vert_source, frag_source);
+			state.frame_shader = create_shader(vert_source, frag_source);
 		}
 
 		// FRAME BUFFER TEXTURE
 	
-		state->frame_texture;
-		glGenTextures(1, &state->frame_texture);
-		glBindTexture(GL_TEXTURE_2D, state->frame_texture);
+		state.frame_texture;
+		glGenTextures(1, &state.frame_texture);
+		glBindTexture(GL_TEXTURE_2D, state.frame_texture);
 
-   		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pixel_buffer->width, pixel_buffer->height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer->pixels);
+   		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pb.width, pb.height, 0, GL_RGB, GL_UNSIGNED_BYTE, pb.pixels);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);		
@@ -480,10 +484,10 @@ namespace opengl
 
 
 		// FRAME BUFFER
-		glGenFramebuffers(1, &state->frame_buffer);
+		glGenFramebuffers(1, &state.frame_buffer);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, state->frame_buffer);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, state->frame_texture, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, state.frame_buffer);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, state.frame_texture, 0);
 
 		GLenum error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		ASSERT(error == GL_FRAMEBUFFER_COMPLETE)
@@ -491,7 +495,7 @@ namespace opengl
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		
 	
-		glViewport(0, 0, pixel_buffer->width, pixel_buffer->height);
+		glViewport(0, 0, pb.width, pb.height);
 		//glClearColor(0.05f, 0.1f, 0.2f, 1.0f);
 		//glClear(GL_COLOR_BUFFER_BIT);
 
@@ -521,19 +525,19 @@ namespace opengl
 		return gl;
 	}
 
-	internal void
-	render(State* state, app::renderer::PixelBuffer* pixel_buffer)
+	fn void
+	render(State& state, PixelBuffer& pb)
 	{
-		glBindVertexArray(state->mesh->vao);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, state->mesh->ibo);
+		glBindVertexArray(state.mesh->vao);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, state.mesh->ibo);
 
-		glUseProgram(state->frame_shader);
+		glUseProgram(state.frame_shader);
 
 		glActiveTexture(GL_TEXTURE0 + 0);
-		glBindTexture(GL_TEXTURE_2D, state->frame_texture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pixel_buffer->width, pixel_buffer->height, GL_RGB, GL_UNSIGNED_BYTE, pixel_buffer->pixels);
+		glBindTexture(GL_TEXTURE_2D, state.frame_texture);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pb.width, pb.height, GL_RGB, GL_UNSIGNED_BYTE, pb.pixels);
 		
-		glDrawElements(GL_TRIANGLES, state->mesh->index_count, GL_UNSIGNED_SHORT, 0);
+		glDrawElements(GL_TRIANGLES, state.mesh->index_count, GL_UNSIGNED_SHORT, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
@@ -541,12 +545,12 @@ namespace opengl
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glUseProgram(0);
 		
-		SwapBuffers(state->device_context);
+		SwapBuffers(state.device_context);
 	}
 
 	/*
 
-	internal void
+	fn void
 	quit(HDC device_context, HGLRC gl_context)
 	{
 		wglMakeCurrent(device_context, 0); 

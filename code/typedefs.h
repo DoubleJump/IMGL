@@ -4,11 +4,9 @@
 #define internal static
 #define local_persist static
 #define global_var static
-
+#define fn static
 
 #include <stdint.h>
-
-//#define UINT32_MAX 0xFFFFFFFF //reinstate when we get rid of stdint
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -27,7 +25,7 @@ typedef double f64;
 typedef size_t memsize;
 
 #if BUILD_SLOW
-#define ASSERT(expression) if(!(expression)) {*(int*)0 = 0; } //write to the null pointer which will force the program to quit
+#define ASSERT(expression) if(!(expression)) {*(int*)0 = 0; }
 #else
 #define ASSERT(expression)
 #endif

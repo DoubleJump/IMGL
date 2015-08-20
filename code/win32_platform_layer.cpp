@@ -25,7 +25,7 @@ namespace win32
 
 	// DISPLAY BUFFER
 
-	internal WinDimensions
+	fn WinDimensions
 	get_window_dimensions(HWND window)
 	{
 		WinDimensions result;
@@ -40,7 +40,7 @@ namespace win32
 
 	// TIMING
 
-	internal LARGE_INTEGER
+	fn LARGE_INTEGER
 	get_current_ticks()
 	{
 		LARGE_INTEGER counter;
@@ -48,7 +48,7 @@ namespace win32
 		return counter;
 	}
 
-	internal f32
+	fn f32
 	get_seconds_elapsed(LARGE_INTEGER start, LARGE_INTEGER end)
 	{
 		auto difference = (f32)(end.QuadPart - start.QuadPart);
@@ -58,39 +58,33 @@ namespace win32
 
 	// KEYBOARD / MOUSE
 
-	internal void
-	process_key_event(app::input::ButtonState* input, b32 down)
+	fn void
+	process_key_event(input::ButtonState& state, b32 down)
 	{
 		if(down)
 		{
-			//if(was_down) *input = app::input::ButtonState::HELD;
-			//else *input = app::input::ButtonState::DOWN;
-
-			if(*input != app::input::ButtonState::HELD)
-				*input = app::input::ButtonState::DOWN;
+			if(state != input::ButtonState::HELD)
+				state = input::ButtonState::DOWN;
 		}
 		else
 		{
-			//if(was_down) *input = app::input::ButtonState::UP;
-			//else *input = app::input::ButtonState::RELEASED;
-
-			if(*input != app::input::ButtonState::RELEASED)
-				*input = app::input::ButtonState::UP;
+			if(state != input::ButtonState::RELEASED)
+				state = input::ButtonState::UP;
 		}
 	}
 
-	internal void
-	update_device_buttons(app::input::ButtonState* buttons, int count)
+	fn void
+	update_device_buttons(input::ButtonState* buttons, int count)
 	{
 		for(int i = 0; i < count; ++i)
 		{
-			if(buttons[i] == app::input::ButtonState::DOWN)
+			if(buttons[i] == input::ButtonState::DOWN)
 			{
-				buttons[i] = app::input::ButtonState::HELD;
+				buttons[i] = input::ButtonState::HELD;
 			}
-			else if(buttons[i] == app::input::ButtonState::UP)
+			else if(buttons[i] == input::ButtonState::UP)
 			{
-				buttons[i] = app::input::ButtonState::RELEASED;
+				buttons[i] = input::ButtonState::RELEASED;
 			}
 		}
 	}
@@ -205,61 +199,65 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 
 	// INIT INPUT
 
-	app::input::Input input = {};
+	input::Devices devices = {};
 
 
 	// ALLOCATE app MEMORY
 	
-	#if BUILD_INTERNAL
+	#if BUILD_fn
 		LPVOID base_address = (LPVOID)TERABYTES(2);
 	#else
 		LPVOID base_address = 0;
 	#endif
 	
-	MemBlock memory = {};
-	memory.used = 0;
-	memory.size = MEGABYTES(64);
-	memory.base = VirtualAlloc(base_address, memory.size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+	memory::Block storage = {};
+	storage.used = 0;
+	storage.size = MEGABYTES(64);
+	storage.base = VirtualAlloc(base_address, storage.size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
 
 	// INIT OPENGL
 
-	opengl::State* render_state = alloc_struct(&memory, opengl::State);
+	opengl::State* render_state = alloc_struct(storage, opengl::State);
 	render_state->thread = &thread;
 	render_state->device_context = device_context;
 	
-	app::renderer::PixelBuffer* pixel_buffer = alloc_struct(&memory, app::renderer::PixelBuffer);
+	renderer::PixelBuffer* pixel_buffer = alloc_struct(storage, renderer::PixelBuffer);
 	pixel_buffer->width = X_RES;
 	pixel_buffer->height = Y_RES;
 	pixel_buffer->pixels_per_world_unit = 1;
 	pixel_buffer->bytes_per_pixel = 3;
 	pixel_buffer->pitch = pixel_buffer->width * pixel_buffer->bytes_per_pixel;
-	pixel_buffer->pixels = alloc_array(&memory, app::RGB, pixel_buffer->width * pixel_buffer->height);
+	pixel_buffer->pixels = alloc_array(storage, RGB8, pixel_buffer->width * pixel_buffer->height);
 
- 	opengl::create_context(&memory, render_state, pixel_buffer);
+ 	opengl::create_context(storage, *render_state, *pixel_buffer);
  	
  	// INIT APP
 
- 	app::State* app_state = alloc_struct(&memory, app::State);
+ 	app::State* app_state = alloc_struct(storage, app::State);
  	app_state->time = app_time;
- 	app::init(&thread, &memory, &input, app_state, pixel_buffer);
+ 	app::init(storage, devices, *app_state, *pixel_buffer);
 
 	// MAIN LOOP
 
 	is_running = true;
 	while(is_running)
 	{
-		auto keyboard = &input.keyboard;
-		update_device_buttons(&keyboard->buttons[0], ARRAY_COUNT(keyboard->buttons));
+		auto& keyboard = devices.keyboard;
+		update_device_buttons(keyboard.buttons, ARRAY_COUNT(keyboard.buttons));
 
 		POINT mouse_pos;
 		GetCursorPos(&mouse_pos);
 		ScreenToClient(window, &mouse_pos);
 
-		auto mouse = &input.mouse;
-		mouse->position.x = (f32)mouse_pos.x;
-		mouse->position.y = (f32)mouse_pos.y;
-		update_device_buttons(&mouse->buttons[0], ARRAY_COUNT(mouse->buttons));
+		auto& mouse = devices.mouse;
+		mouse.position.x = (f32)mouse_pos.x;
+		mouse.position.y = (f32)mouse_pos.y;
+		update_device_buttons(mouse.buttons, ARRAY_COUNT(mouse.buttons));
 		
+		if(app_state->quit)
+		{
+			is_running = false;
+		}
 
 		// HANDLE MESSAGES
 
@@ -276,25 +274,25 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 				case WM_LBUTTONDOWN:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(&mouse->left, true);
+					process_key_event(mouse.left, true);
 					break;
 				}
 				case WM_LBUTTONUP:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(&mouse->left, false);
+					process_key_event(mouse.left, false);
 					break;
 				}
 				case WM_RBUTTONDOWN:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(&mouse->right, true);
+					process_key_event(mouse.right, true);
 					break;
 				}
 				case WM_RBUTTONUP:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(&mouse->right, false);
+					process_key_event(mouse.right, false);
 					break;
 				}
 				case WM_SYSKEYDOWN:
@@ -308,23 +306,23 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 
 					if(key_code == 'W' || key_code == VK_UP)
 					{
-						process_key_event(&keyboard->up, is_down);
+						process_key_event(keyboard.up, is_down);
 					}
 					else if(key_code == 'S' || key_code == VK_DOWN)
 					{
-						process_key_event(&keyboard->down, is_down);
+						process_key_event(keyboard.down, is_down);
 					}
 					else if(key_code == 'A' || key_code == VK_LEFT)
 					{
-						process_key_event(&keyboard->left, is_down);
+						process_key_event(keyboard.left, is_down);
 					}
 					else if(key_code == 'D' || key_code == VK_RIGHT)
 					{
-						process_key_event(&keyboard->right, is_down);
+						process_key_event(keyboard.right, is_down);
 					}
 					else if(key_code == 'R')
 					{
-						process_key_event(&keyboard->R, is_down);
+						process_key_event(keyboard.R, is_down);
 					}
 					else if(key_code == VK_ESCAPE)
 					{
@@ -350,7 +348,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	
 		app_time.dt = target_seconds_per_frame;
 		app_state->time = app_time;
-		app::update_and_render(&thread, &memory, &input, pixel_buffer, app_state);
+		app::update(storage, devices, *pixel_buffer, *app_state);
 	
 		auto work_seconds = get_seconds_elapsed(last_ticks, get_current_ticks());				
 		
@@ -385,7 +383,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 		f64 ms_per_frame = 1000.0f * get_seconds_elapsed(last_ticks, end_ticks);
 		last_ticks = end_ticks;
 
-		opengl::render(render_state, pixel_buffer);
+		opengl::render(*render_state, *pixel_buffer);
 
 		flip_ticks = get_current_ticks();
 

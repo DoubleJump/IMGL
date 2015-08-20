@@ -16,7 +16,7 @@ namespace renderer
 		Vec3* positions;
 		Vec2* uvs;
 		Vec2* uvs2;
-		Color* colors;
+		RGBA* colors;
 		Vec3* normals;
 		u16* indices;
 	};
@@ -40,66 +40,14 @@ namespace renderer
 		i32 pixels_per_world_unit;
 		i32 bytes_per_pixel;
 		i32 pitch;
-		RGB* pixels;
+		RGB8* pixels;
 	};
 
-	internal void
-	clear(PixelBuffer* buffer, RGB color)
-	{
-		memsize count = buffer->width * buffer->height;
-		for(memsize i = 0; i < count; ++i)
-		{
-			buffer->pixels[i] = color;
-		}
-	}
-
-	internal void
-	pixel(PixelBuffer* buffer, i32 x, i32 y, u32 color)
-	{
-		auto index = x + (y * buffer->width); 
-		auto offset = buffer->bytes_per_pixel * index;
-		auto pixel = (u8*)(buffer->pixels) + offset;
-		*(u32*)pixel = color;
-	}
 	
-	internal void
-	draw_rect(PixelBuffer* buffer, Rect rect, RGB rgb)
-	{
-		auto i_min_x = math::round_to_i32(rect.min.x * buffer->pixels_per_world_unit);
-		auto i_min_y = math::round_to_i32(rect.min.y * buffer->pixels_per_world_unit);
-		auto i_max_x = math::round_to_i32(rect.max.x * buffer->pixels_per_world_unit);
-		auto i_max_y = math::round_to_i32(rect.max.y * buffer->pixels_per_world_unit);
 
-		// Clip to screen
-		/*
-		if(i_min_x < 0) i_min_x = 0;
-		if(i_min_y < 0) i_min_y = 0;
-		if(i_max_x > buffer->width) i_max_x = buffer->width;
-		if(i_max_y > buffer->height) i_max_y = buffer->height;
-		*/
-		// Flip y axis
-
-		//i_min_y = buffer->height - i_min_y;
-		//i_max_y = buffer->height - i_max_y;
-
-		auto x_offset = i_min_x * buffer->bytes_per_pixel;
-		auto y_offset = i_min_y * buffer->pitch;
-		auto row = (u8*)(buffer->pixels) + x_offset + y_offset;
-
-		for(int y = i_min_y; y < i_max_y; ++y)
-		{
-			auto pixel = (RGB*)row;
-			for(int x = i_min_x; x < i_max_x; ++x)
-			{
-				*pixel++ = rgb;
-			}
-
-			row += buffer->pitch;
-		}
-	}
 
 	/*
-	internal void
+	fn void
     image(PixelBuffer* buffer, Bitmap* bitmap, f32 x, f32 y)
     {
     	auto i_min_x = round_to_i32(x * buffer->pixels_per_world_unit);
@@ -165,7 +113,7 @@ namespace renderer
     */
 
     /*
-	internal void
+	fn void
 	line(PixelBuffer* buffer, Vec2 start, Vec2 end, RGBA rgba)
 	{
 		auto x0 = round_to_i32(start.x * buffer->pixels_per_world_unit);
@@ -209,7 +157,7 @@ namespace renderer
 		}
 	}
 
-	internal void
+	fn void
 	wire_rect(PixelBuffer* buffer, Rect rect, RGBA rgba)
 	{
 		line(buffer, {rect.min.x, rect.max.y}, {rect.max.x, rect.max.y}, rgba);
@@ -218,7 +166,7 @@ namespace renderer
 		line(buffer, {rect.min.x, rect.min.y}, {rect.min.x, rect.max.y}, rgba);
 	}
 
-	internal void
+	fn void
 	circle(PixelBuffer* buffer, Vec2 pos, f32 radius, RGBA rgba)
 	{
 		auto color = to_u32(rgba);
@@ -249,4 +197,81 @@ namespace renderer
 		}
     }
     */
+}
+
+namespace draw
+{
+	struct Context
+	{
+		renderer::PixelBuffer* buffer;
+		RGB8 color;
+		Mat3 transform;
+	};
+
+	local_persist Context* ctx;
+
+	fn Context new_context(renderer::PixelBuffer& buffer)
+	{
+		Context c;
+		c.buffer = &buffer;
+		c.color = { 0,0,0 };
+		c.transform = mat3::identity;
+		return c;
+	}
+
+	fn void set_context(Context& context)
+	{
+		draw::ctx = &context;
+	}
+
+	fn void clear(RGB8 color)
+	{
+		auto buffer = draw::ctx->buffer;
+		memsize count = buffer->width * buffer->height;
+		for(memsize i = 0; i < count; ++i)
+		{
+			buffer->pixels[i] = color;
+		}
+	}
+
+	fn void
+	rect(Rect r)
+	{
+		auto buffer = draw::ctx->buffer;
+		auto rgb = draw::ctx->color;
+
+		auto min = rect::min(r);
+		auto max = rect::max(r);
+		auto i_min_x = math::round_to_i32(min.x * buffer->pixels_per_world_unit);
+		auto i_min_y = math::round_to_i32(min.y * buffer->pixels_per_world_unit);
+		auto i_max_x = math::round_to_i32(max.x * buffer->pixels_per_world_unit);
+		auto i_max_y = math::round_to_i32(max.y * buffer->pixels_per_world_unit);
+
+		// Clip to screen
+		/*
+		if(i_min_x < 0) i_min_x = 0;
+		if(i_min_y < 0) i_min_y = 0;
+		if(i_max_x > buffer->width) i_max_x = buffer->width;
+		if(i_max_y > buffer->height) i_max_y = buffer->height;
+		*/
+		// Flip y axis
+
+		//i_min_y = buffer->height - i_min_y;
+		//i_max_y = buffer->height - i_max_y;
+
+		auto x_offset = i_min_x * buffer->bytes_per_pixel;
+		auto y_offset = i_min_y * buffer->pitch;
+		auto row = (u8*)(buffer->pixels) + x_offset + y_offset;
+
+		for(int y = i_min_y; y < i_max_y; ++y)
+		{
+			auto pixel = (RGB8*)row;
+			for(int x = i_min_x; x < i_max_x; ++x)
+			{
+				*pixel++ = rgb;
+			}
+
+			row += buffer->pitch;
+		}
+	}
 }

@@ -119,4 +119,24 @@ namespace vec2
 		else if(f < 1.0f) return acos(-1.0f);
 		else return acos(f);
 	}
+
+	internal Vec2
+	min(Vec2 a, Vec2 b)
+	{
+		return 
+		{ 
+			math::min(a.x, b.x),
+			math::min(a.y, b.y),
+		};
+	}
+
+	internal Vec2
+	max(Vec2 a, Vec2 b)
+	{
+		return 
+		{ 
+			math::max(a.x, b.x),
+			math::max(a.y, b.y),
+		};
+	}
 }

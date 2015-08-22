@@ -115,7 +115,7 @@ namespace app
 		update_transform(state.world); 
 
 		auto& ent = state.entity;
-		//ent.rotation += dt * 20;
+		ent.rotation += dt * 20;
 		update_transform(state.entity);
 
 		auto& m = ent.matrix;

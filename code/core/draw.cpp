@@ -167,23 +167,25 @@ namespace draw
 			auto pixel = (RGB8*)row;
 			for(int x = vmin.x; x < vmax.x; ++x)
 			{
-				Vec2 pos = {(f32)x - vmin.x, (f32)y - vmin.y};
-				f32 edge0 = vec2::dot(pos, {0,-1});
-				f32 edge1 = vec2::dot(pos, {0,1});
-				f32 edge2 = vec2::dot(pos, {0,0});
-				f32 edge3 = vec2::dot(pos, {1,0});
+				Vec2 pos = {(f32)x,(f32)y};
 
-				/*
+				Vec2 pa = {x - a.x, y - a.y};
+				Vec2 pc = {x - c.x, y - c.y};
+
+				f32 edge0 = vec2::dot(pa, a-b);
+				f32 edge1 = vec2::dot(pa, a-d);
+				f32 edge2 = vec2::dot(pc, c-b);
+				f32 edge3 = vec2::dot(pc, c-d);
+
+				//if((edge0 < 0) && (edge1 > 0) && (edge2 > 0) && (edge3 < 0))
 				if((edge0 < 0) && (edge1 < 0) && (edge2 < 0) && (edge3 < 0))
 				{
 					*pixel = rgb;
 				}
-				*/
-				if((edge0 < 0) && (edge1 < 0))
+				else
 				{
-					*pixel = rgb;
+					*pixel = {45,55,65};
 				}
-				//*pixel = rgb;
 				++pixel;
 			}
 

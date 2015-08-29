@@ -36,10 +36,7 @@ struct AngleAxis
 
 struct Rect
 {
-	f32 x;
-	f32 y;
-	f32 width;
-	f32 height;
+	f32 x, y, width, height;
 };
 
 struct Quat
@@ -77,20 +74,17 @@ struct Mat4
 
 struct Ray
 {
-	Vec3 origin;
-	Vec3 dir;
+	Vec3 origin, dir;
 };
 
 struct Line
 {
-	Vec3 start;
-	Vec3 end;
+	Vec3 start, end;
 };
 
 struct AABB
 {
-	Vec3 min;
-	Vec3 max;
+	Vec3 min, max;
 };
 
 struct RGBA
@@ -101,4 +95,9 @@ struct RGBA
 struct RGB8
 {
 	u8 r, g, b;
+};
+
+struct RGBA8
+{
+	u8 r,g,b,a;
 };

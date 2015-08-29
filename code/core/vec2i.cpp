@@ -86,10 +86,7 @@ namespace vec2i
 	angle(Vec2i a, Vec2i b)
 	{
 		f32 l = length(a) * length(b);
-		if(l < F32_EPSILON)
-		{
-			l = F32_EPSILON;
-		}
+		if(l < EPSILON) l = EPSILON;
 		f32 f = dot(a,b) / l;
 
 		if(f > 1.0f) return acos(1.0f);

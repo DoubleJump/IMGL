@@ -92,7 +92,7 @@ namespace vec2
 	normalize(Vec2 a)
 	{
 		f32 l = length(a);
-		if(l > F32_EPSILON)
+		if(l > EPSILON)
 		{
 			a *= (1.0f / l);
 		}
@@ -121,10 +121,7 @@ namespace vec2
 	angle(Vec2 a, Vec2 b)
 	{
 		f32 l = length(a) * length(b);
-		if(l < F32_EPSILON)
-		{
-			l = F32_EPSILON;
-		}
+		if(l < EPSILON) l = EPSILON;
 		f32 f = dot(a,b) / l;
 
 		if(f > 1.0f) return acos(1.0f);
@@ -156,5 +153,11 @@ namespace vec2
 			math::max(a.x, b.x),
 			math::max(a.y, b.y),
 		};
+	}
+
+	fn Vec2
+	to_polar(Vec2 p)
+	{
+		return { atan2(p.y, p.x), length(p) };
 	}
 }

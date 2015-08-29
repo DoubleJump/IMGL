@@ -472,7 +472,7 @@ namespace opengl
 		glGenTextures(1, &state.frame_texture);
 		glBindTexture(GL_TEXTURE_2D, state.frame_texture);
 
-   		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, pb.width, pb.height, 0, GL_RGB, GL_UNSIGNED_BYTE, pb.pixels);
+   		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pb.width, pb.height, 0, GL_RGB, GL_UNSIGNED_BYTE, pb.pixels);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);		
@@ -535,7 +535,7 @@ namespace opengl
 
 		glActiveTexture(GL_TEXTURE0 + 0);
 		glBindTexture(GL_TEXTURE_2D, state.frame_texture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pb.width, pb.height, GL_RGB, GL_UNSIGNED_BYTE, pb.pixels);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, pb.width, pb.height, GL_RGBA, GL_UNSIGNED_BYTE, pb.pixels);
 		
 		glDrawElements(GL_TRIANGLES, state.mesh->index_count, GL_UNSIGNED_SHORT, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

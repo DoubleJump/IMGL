@@ -92,7 +92,7 @@ namespace vec3
 	normalize(Vec3 a)
 	{
 		f32 l = length(a);
-		if(l > F32_EPSILON)
+		if(l > EPSILON)
 		{
 			a *= (1.0f / l);
 		}
@@ -132,10 +132,7 @@ namespace vec3
 	angle(Vec3 a, Vec3 b)
 	{
 		f32 l = length(a) * length(b);
-		if(l < F32_EPSILON)
-		{
-			l = F32_EPSILON;
-		}
+		if(l < EPSILON) l = EPSILON;
 		f32 f = dot(a,b) / l;
 
 		if(f > 1.0f) return acos(1.0f);
@@ -174,5 +171,27 @@ namespace vec3
 			math::clamp(v.y, min, max),
 			math::clamp(v.z, min, max)
 		};
+	}
+
+	fn Vec3
+	latlong_to_cartesian(f32 lat, f32 lng, f32 radius)
+	{
+		f32 phi = (90.0f - lat) * DEG2RAD;
+		f32 theta = (180.0f - lng) * DEG2RAD;
+
+		Vec3 r;
+		r.x = radius * sin(phi) * cos(theta);
+		r.y = radius * cos(phi);
+		r.z = radius * sin(phi) * sin(theta);
+		return r;
+	}
+
+	fn Vec3
+	to_polar(Vec3 p)
+	{
+		f32 radius = length(p);
+		f32 theta = atan2(p.y, p.x);
+		f32 phi = acos(2.0f / radius);
+		return { theta, phi, radius };
 	}
 }

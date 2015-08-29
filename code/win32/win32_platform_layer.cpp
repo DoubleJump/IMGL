@@ -253,9 +253,9 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	pixel_buffer->width = X_RES;
 	pixel_buffer->height = Y_RES;
 	pixel_buffer->pixels_per_world_unit = 1;
-	pixel_buffer->bytes_per_pixel = 3;
+	pixel_buffer->bytes_per_pixel = 4;
 	pixel_buffer->pitch = pixel_buffer->width * pixel_buffer->bytes_per_pixel;
-	pixel_buffer->pixels = alloc_array(storage, RGB8, pixel_buffer->width * pixel_buffer->height);
+	pixel_buffer->pixels = alloc_array(storage, RGBA8, pixel_buffer->width * pixel_buffer->height);
 
  	opengl::create_context(storage, *render_state, *pixel_buffer);
  	

@@ -74,7 +74,7 @@ namespace mat3
 	    r.m[8] = m[0] * m[4] - m[1] * m[3];
 
 	    f32 det = m[0] * r[0] + m[1] * r[3] + m[2] * r[6];
-	    if(abs(det) <= F32_EPSILON)
+	    if(abs(det) <= EPSILON)
 	    {
 	        return identity;
 	    }

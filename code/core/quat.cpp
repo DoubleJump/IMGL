@@ -88,7 +88,7 @@ namespace quat
 	normalize(Quat a)
 	{
 		f32 l = length(a);
-		if(l > F32_EPSILON)
+		if(l > EPSILON)
 		{
 			f32 i = 1.0f / l;
 			a *= i;
@@ -142,13 +142,13 @@ namespace quat
 		if(test > tolerance) // North singluarity
 		{ 
 			v.x = 2.0f * atan2(q.x, q.w);
-			v.y = PI32 / 2.0f; 
+			v.y = PI / 2.0f; 
 			v.z = 0;
 		}
 		else if(test < -tolerance) // South singularity
 		{ 
 			v.x = -2.0f * atan2(q.x, q.w);
-			v.y = -PI32 / 2.0f;
+			v.y = -PI / 2.0f;
 			v.z = 0;
 		}
 		else

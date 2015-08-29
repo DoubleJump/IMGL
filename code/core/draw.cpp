@@ -3,8 +3,9 @@ namespace draw
 	struct Context
 	{
 		renderer::PixelBuffer* buffer;
-		RGB8 color;
+		RGBA8 color;
 		Mat3 transform;
+		//blend mode
 	};
 
 	global_var Context* ctx;
@@ -13,7 +14,7 @@ namespace draw
 	{
 		Context c;
 		c.buffer = &buffer;
-		c.color = { 0,0,0 };
+		c.color = { 0,0,0,255 };
 		c.transform = mat3::identity;
 		return c;
 	}
@@ -23,7 +24,7 @@ namespace draw
 		draw::ctx = &context;
 	}
 
-	fn void clear(RGB8 color)
+	fn void clear(RGBA8 color)
 	{
 		auto buffer = draw::ctx->buffer;
 		memsize count = buffer->width * buffer->height;
@@ -33,163 +34,215 @@ namespace draw
 		}
 	}
 
-	fn void set_color(RGB8 color)
+	fn void set_color(RGBA8 color)
 	{
 		draw::ctx->color = color;
 	}
 
-	/*
-	fn void
-	rect(Rect r)
+	fn RGBA8
+	linear_blend(RGBA8 src, RGBA8 dest)
 	{
-		auto buffer = draw::ctx->buffer;
-		auto rgb = draw::ctx->color;
+		f32 dest_r = (f32)dest.r;
+		f32 dest_g = (f32)dest.g;
+		f32 dest_b = (f32)dest.b;
 
-		auto min = rect::min(r);
-		auto max = rect::max(r);
-		auto i_min_x = math::round_to_i32(min.x);
-		auto i_min_y = math::round_to_i32(min.y);
-		auto i_max_x = math::round_to_i32(max.x);
-		auto i_max_y = math::round_to_i32(max.y);
+		f32 src_r = (f32)src.r;
+		f32 src_g = (f32)src.g;
+		f32 src_b = (f32)src.b;
+		f32 t = src.a / 255.0f;
 
-		// Clip to screen
-		if(i_min_x < 0) i_min_x = 0;
-		if(i_max_x < 0) i_max_x = 0;
+		//(1-t) * B + t * A;
+		u8 r = (u8)((1.0f - t) * dest.r + t * src.r);
+		u8 g = (u8)((1.0f - t) * dest.g + t * src.g);
+		u8 b = (u8)((1.0f - t) * dest.b + t * src.b);
 
-		if(i_min_y < 0) i_min_y = 0;
-		if(i_max_y < 0) i_max_y = 0;
-
-		if(i_min_x > buffer->width)  i_min_x = buffer->width;
-		if(i_min_y > buffer->height) i_min_y = buffer->height;
-		if(i_max_x > buffer->width)  i_max_x = buffer->width;
-		if(i_max_y > buffer->height) i_max_y = buffer->height;
-
-
-		auto x_offset = i_min_x * buffer->bytes_per_pixel;
-		auto y_offset = i_min_y * buffer->pitch;
-		auto row = (u8*)(buffer->pixels) + x_offset + y_offset;
-
-		for(int y = i_min_y; y < i_max_y; ++y)
-		{
-			auto pixel = (RGB8*)row;
-			for(int x = i_min_x; x < i_max_x; ++x)
-			{
-				*pixel++ = rgb;
-			}
-
-			row += buffer->pitch;
-		}
+		return {r, g, b, dest.a};
 	}
-	*/
 
 	fn void
-	rect(f32 x, f32 y, Mat3 m)
+	fill_points(Vec2* points, i32 count, Mat3 m)
 	{
 		auto buffer = draw::ctx->buffer;
-		auto rgb = draw::ctx->color;
+		auto color = draw::ctx->color;
 
-		Vec2 origin = { m[2], m[5] };
-		Vec2 radii = { x * 0.5f, y * 0.5f };
-		
-		auto a = mat3::mul_point(m, -radii);
-		auto b = mat3::mul_point(m, { -radii.x, radii.y });
-		auto c = mat3::mul_point(m, radii);
-		auto d = mat3::mul_point(m, { radii.x, -radii.y });
+		// these bounds can be calculated elsewhere and cached
+		auto min = mat3::mul_point(m, points[0]);
+		auto max = mat3::mul_point(m, points[0]);
+		for(i32 i = 1; i < count; ++i)
+		{
+			auto p = mat3::mul_point(m, points[i]);
+			if(p.x < min.x) min.x = p.x;
+			if(p.x > max.x) max.x = p.x;
+			if(p.y < min.y) min.y = p.y;
+			if(p.y > max.y) max.y = p.y;
+		}
 
-		auto min_x = a.x;
-		if(b.x < min_x) min_x = b.x;
-		if(c.x < min_x) min_x = c.x;
-		if(d.x < min_x) min_x = d.x;
-
-		auto max_x = a.x;	
-		if(b.x > max_x) max_x = b.x;
-		if(c.x > max_x) max_x = c.x;
-		if(d.x > max_x) max_x = d.x;
-
-		auto min_y = a.y;
-		if(b.y < min_y) min_y = b.y;
-		if(c.y < min_y) min_y = c.y;
-		if(d.y < min_y) min_y = d.y;
-
-		auto max_y = a.y;	
-		if(b.y > max_y) max_y = b.y;
-		if(c.y > max_y) max_y = c.y;
-		if(d.y > max_y) max_y = d.y;
-
-		Vec2i vmin = vec2i::from_vec2f({min_x, min_y});
-		Vec2i vmax = vec2i::from_vec2f({max_x, max_y});		
-
-		/*
-		auto min_x = a.x;
-		auto min_y = a.y;
-		auto max_x = a.x;
-		auto max_y = a.y;
-		if(c.x < min_x) min_x = c.x;
-		if(c.x > max_x) max_x = c.x; 
-		if(c.y < min_y) min_y = c.y; 
-		if(c.y > min_y) min_y = c.y; 
-
-		Vec2i vmin = vec2i::from_vec2f({min_x, min_y});
-		Vec2i vmax = vec2i::from_vec2f({max_x, max_y});	
-		*/
-
-		//Vec2 x_axis = { m[0], m[3] };
-		//Vec2 y_axis = { m[1], m[4] };
-
-		/*
-		auto i_min_x = math::round_to_i32(min.x);
-		auto i_min_y = math::round_to_i32(min.y);
-		auto i_max_x = math::round_to_i32(max.x);
-		auto i_max_y = math::round_to_i32(max.y);
-		*/
+		Vec2i vmin = vec2i::from_vec2f(min);
+		Vec2i vmax = vec2i::from_vec2f(max);		
 
 		// Clip to screen
-		/*
-		if(i_min_x < 0) i_min_x = 0;
-		if(i_max_x < 0) i_max_x = 0;
-
-		if(i_min_y < 0) i_min_y = 0;
-		if(i_max_y < 0) i_max_y = 0;
-
-		if(i_min_x > buffer->width)  i_min_x = buffer->width;
-		if(i_min_y > buffer->height) i_min_y = buffer->height;
-		if(i_max_x > buffer->width)  i_max_x = buffer->width;
-		if(i_max_y > buffer->height) i_max_y = buffer->height;
-		*/
-
+		if(vmin.x < 0) vmin.x = 0;
+		if(vmin.y < 0) vmin.y = 0;
+		if(vmax.x > buffer->width)  vmax.x = buffer->width;
+		if(vmax.y > buffer->height) vmax.y = buffer->height;
 
 		auto x_offset = vmin.x * buffer->bytes_per_pixel;
 		auto y_offset = vmin.y * buffer->pitch;
 		auto row = (u8*)(buffer->pixels) + x_offset + y_offset;
 
-		for(int y = vmin.y; y < vmax.y; ++y)
+		for(i32 y = vmin.y; y < vmax.y; ++y)
 		{
-			auto pixel = (RGB8*)row;
-			for(int x = vmin.x; x < vmax.x; ++x)
+			auto pixel = (RGBA8*)row;
+			f32 fy = (f32)y;
+
+			for(i32 x = vmin.x; x < vmax.x; ++x)
 			{
-				Vec2 pos = {(f32)x,(f32)y};
+				Vec2 pos = {(f32)x,fy};
 
-				Vec2 pa = {x - a.x, y - a.y};
-				Vec2 pc = {x - c.x, y - c.y};
-
-				f32 edge0 = vec2::dot(pa, a-b);
-				f32 edge1 = vec2::dot(pa, a-d);
-				f32 edge2 = vec2::dot(pc, c-b);
-				f32 edge3 = vec2::dot(pc, c-d);
-
-				//if((edge0 < 0) && (edge1 > 0) && (edge2 > 0) && (edge3 < 0))
-				if((edge0 < 0) && (edge1 < 0) && (edge2 < 0) && (edge3 < 0))
+				Vec2 a = mat3::mul_point(m, points[0]);
+				b32 test = true;
+				for(i32 z = 1; z < count; ++z)
 				{
-					*pixel = rgb;
+					Vec2 b = mat3::mul_point(m, points[z]);
+					if(vec2::dot(pos - a, b-a) < 0)
+					{
+						test = false;
+						break;
+					}
+					a = b;
 				}
-				else
+				if(test)
 				{
-					*pixel = {45,55,65};
+					*pixel = linear_blend(color, *pixel);
 				}
+				
 				++pixel;
 			}
 
 			row += buffer->pitch;
 		}
 	}
+
+	fn void
+	fill_rect(f32 x, f32 y, f32 w, f32 h)
+	{
+		auto buffer = draw::ctx->buffer;
+		auto color = draw::ctx->color;
+
+		auto min_x = math::round_to_i32(x);
+		auto min_y = math::round_to_i32(y);
+		auto max_x = min_x + math::round_to_i32(w);
+		auto max_y = min_y + math::round_to_i32(h);
+
+		// Clip to screen
+		if(min_x < 0) min_x = 0;
+		if(min_y < 0) min_y = 0;
+		if(max_x > buffer->width)  max_x = buffer->width;
+		if(max_y > buffer->height) max_y = buffer->height;
+
+		auto x_offset = min_x * buffer->bytes_per_pixel;
+		auto y_offset = min_y * buffer->pitch;
+		auto row = (u8*)(buffer->pixels) + x_offset + y_offset;
+
+		for(int py = min_y; py < max_y; ++py)
+		{
+			auto pixel = (RGBA8*)row;
+			for(int px = min_x; px < max_x; ++px)
+			{
+				*pixel = linear_blend(color, *pixel);
+				++pixel;
+			}
+
+			row += buffer->pitch;
+		}
+	}
+
+	/*
+	fn void
+	line(Vec2 start, Vec2 end)
+	{
+		auto buffer = draw::ctx->buffer;
+		auto rgb = draw::ctx->color;
+
+		auto x0 = round_to_i32(start.x * buffer->pixels_per_world_unit);
+		auto x1 = round_to_i32(end.x * buffer->pixels_per_world_unit);
+		auto y0 = buffer->height - round_to_i32(start.y * buffer->pixels_per_world_unit);
+		auto y1 = buffer->height - round_to_i32(end.y * buffer->pixels_per_world_unit);
+
+		auto color = to_u32(rgba);
+
+		i32 dx = abs(x1 - x0);		
+		i32 sx = -1;
+		if(x0 < x1)
+		{
+			sx = 1;
+		}
+   		i32 dy = -abs(y1 - y0);
+   		i32 sy = -1;
+   		if(y0 < y1)
+   		{
+   			sy = 1;
+   		} 
+   		i32 err = dx + dy;
+   		i32 e2;
+ 
+		for(;;)
+		{
+			pixel(buffer, x0, y0, color);
+
+			if (x0 == x1 && y0 == y1) break;
+			e2 = 2 * err;
+			if (e2 >= dy) 
+			{ 
+				err += dy; 
+				x0 += sx; 
+			}
+			if (e2 <= dx) 
+			{ 
+				err += dx; 
+				y0 += sy; 
+			}
+		}
+	}
+
+	internal void
+	wire_rect(PixelBuffer* buffer, Rect rect, RGBA rgba)
+	{
+		line(buffer, {rect.min.x, rect.max.y}, {rect.max.x, rect.max.y}, rgba);
+		line(buffer, {rect.max.x, rect.max.y}, {rect.max.x, rect.min.y}, rgba);
+		line(buffer, {rect.max.x, rect.min.y}, {rect.min.x, rect.min.y}, rgba);
+		line(buffer, {rect.min.x, rect.min.y}, {rect.min.x, rect.max.y}, rgba);
+	}
+
+	internal void
+	circle(PixelBuffer* buffer, Vec2 pos, f32 radius, RGBA rgba)
+	{
+		auto color = to_u32(rgba);
+
+		i32 ix = round_to_i32(pos.x);
+		i32 iy = round_to_i32(pos.y);
+		i32 r = round_to_i32(radius);
+		i32 x = -r;
+		i32 y = 0;
+		i32 err = 2 - 2 * r; 
+
+		while(x < 0)
+		{
+			pixel(buffer, ix - x, iy + y, color); 
+      		pixel(buffer, ix - y, iy - x, color); 
+      		pixel(buffer, ix + x, iy - y, color); 
+      		pixel(buffer, ix + y, iy + x, color);
+
+      		r = err;
+      		if(r <= y) 
+      		{
+      			err += ++y * 2 + 1;
+      		}           
+      		if(r > x || err > y)
+      		{
+      			err += ++x * 2 + 1;
+      		}
+		}
+    }
+    */
 }

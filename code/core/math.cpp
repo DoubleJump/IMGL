@@ -2,15 +2,17 @@
 
 namespace math
 {
-	#define E32 2.71828182845f
-	#define PI32 3.14159265359f
-	#define TAU32 2.0f * PI32
+	#define E 2.71828182845f
+	#define PI 3.14159265359f
+	#define TAU 6.28318530718f
+	//#define INFINITY 99999999.0f
 	#define SQRT_HALF 0.7071067811865475f
-	#define F32_EPSILON 0.000001f
+	#define EPSILON 0.000001f
 	#define F32_MAX 3.4028234e38f
-	#define DEG2RAD PI32 / 180.0f
-	#define PI_OVER_360 PI32 / 360.0f
+	#define DEG2RAD PI / 180.0f
+	#define PI_OVER_360 PI / 360.0f
 	#define RAD2DEG 57.5957795f
+	#define GOLDEN_ANGLE (PI*(3-sqrt(5.0f)))
 
 	fn f32 
 	min(f32 a, f32 b) 
@@ -150,6 +152,8 @@ namespace math
 
         return hash;
     }
+
+    
 }
 
 struct BitScanResult

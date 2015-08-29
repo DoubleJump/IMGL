@@ -12,6 +12,7 @@
 #include "../core/input.cpp"
 #include "../core/renderer.cpp"
 #include "../core/draw.cpp"
+#include "../core/scene.cpp"
 
 namespace app
 {
@@ -29,15 +30,6 @@ namespace app
 		f32 cos_t;
 	};
 
-	struct Transform2D
-	{
-		Vec2 position;
-		Vec2 scale;
-		f32 rotation;
-		Mat3 matrix;
-		Transform2D* parent; //make this an id obvs
-	};
-
 	struct State
 	{
 		draw::Context draw_ctx;
@@ -46,21 +38,10 @@ namespace app
 		b32 quit;
 		f32 x;
 
-		Transform2D world;
-		Transform2D entity;
+		Scene construct;
 	};
 
-	
-	
-	fn void
-	update_transform(Transform2D& t)
-	{
-		t.matrix = mat3::compose(t.position, t.scale, t.rotation);
-		if(t.parent)
-		{
-			t.matrix = t.parent->matrix * t.matrix;
-		}
-	}
+
 
 	fn void
 	init(memory::Block& storage, 
@@ -75,20 +56,18 @@ namespace app
 
 		state.x = 0;
 
-		auto& world = state.world;
-		world.position = {(f32)pixel_buffer.width / 2.0f, (f32)pixel_buffer.height / 2.0f};
-		world.scale = {1,-1}; //scale by pixels and invert y axis
-		world.rotation = 0;
-		world.parent = 0;
-		world.matrix = mat3::identity;
-		update_transform(world);
+		auto& construct = state.construct;
+		scene::set_context(construct);
+		scene::init(storage, 16);
 
-		auto& entity = state.entity;
-		entity.position = {0,0};
-		entity.scale = {1,1};
-		entity.rotation = 0;
-		entity.parent = &world;
-		entity.matrix = mat3::identity;
+		auto& root = construct.entities[0];
+		auto cx = (f32)pixel_buffer.width / 2.0f;
+		auto cy = (f32)pixel_buffer.height / 2.0f;
+		scene::set_transform(root, {cx,cy}, {1,-1}, 45);
+
+		auto& bob = scene::new_entity();		
+		scene::set_transform(bob, {0,0}, {1,1}, 0);
+
 	}
 
 	internal void
@@ -111,38 +90,30 @@ namespace app
 			state.quit = true;
 		}
 
-		//state.world.rotation += dt * 10;
-		update_transform(state.world); 
+		auto& construct = state.construct;
+		auto& bob = construct.entities[1];
+		bob.position.x += dt * 30;
+		//bob.rotation += dt * 100;
+		bob.dirty = true;
 
-		auto& ent = state.entity;
-		ent.rotation += dt * 20;
-		update_transform(state.entity);
+		scene::update(); 
 
-		auto& m = ent.matrix;
-		Vec2 origin = { m[2], m[5] };
-		Vec2 x_axis = { m[0], m[3] };
-		Vec2 y_axis = { m[1], m[4] };
 
-		draw::clear({15,25,35});
 
-		draw::set_color({255,255,255});
-		draw::rect(50,50, m);
+		draw::clear({15,20,25,255});
 
-		/*
-		draw::set_color({255,255,255});
-		draw::rect({origin.x, origin.y, 10,10});
+		draw::set_color({123,223,125,255});
+		draw::fill_rect(150,200,100,100);
 
-		draw::set_color({0,0,255});
-		draw::rect({origin.x + x_axis.x, origin.y + x_axis.y, 10,10});
-
-		draw::set_color({255,0,0});
-		draw::rect({origin.x + y_axis.x, origin.y + y_axis.y, 10,10});
-		*/
+		draw::set_color({255,255,255, 200});
+		i32 count = 5;
+		Vec2 points[5] = { {-10, -10}, {-10, 10}, {10, 10}, {10, -10}, {-10,-10}}; 
+		draw::fill_points(points, count, bob.world_matrix);
 
 	}
 
-	//EP 92
-	//42:37
+	//EP 93
+	//32:37
 
 	
 }

@@ -7,20 +7,20 @@ namespace memory
 		void* base;
 	};
 	fn void
-	set_block(Block& block, memsize size, void* base)
+	set_block(Block* block, memsize size, void* base)
 	{
-		block.size = size;
-		block.base = base;
-		block.used = 0;
+		block->size = size;
+		block->base = base;
+		block->used = 0;
 	}
 
 	fn void*
-	alloc(Block& block, memsize size)
+	alloc(Block* block, memsize size)
 	{
-		ASSERT((block.used + size) <= block.size);
-		u8* base = (u8*)block.base;
-		void* address = (void*)(base + block.used);
-		block.used += size;
+		ASSERT((block->used + size) <= block->size);
+		u8* base = (u8*)block->base;
+		void* address = (void*)(base + block->used);
+		block->used += size;
 		return address;
 	}
 

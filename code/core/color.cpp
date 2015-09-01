@@ -1,36 +1,36 @@
-fn RGBA
-operator + (RGBA a, f32 b)
+fn Color
+operator + (Color a, f32 b)
 {
 	return { a.r + b, a.g + b, a.b + b, a.a + b };
 }
 
-fn RGBA 
-operator - (RGBA a, f32 b)
+fn Color 
+operator - (Color a, f32 b)
 {
 	return { a.r - b, a.g - b, a.b - b, a.a - b };
 }
 
-fn RGBA 
-operator * (RGBA a, f32 f)
+fn Color 
+operator * (Color a, f32 f)
 {
 	return { a.r * f, a.g * f, a.b * f, a.a * f };
 }
 
-fn RGBA 
-operator / (RGBA a, f32 f)
+fn Color 
+operator / (Color a, f32 f)
 {
 	return { a.r / f, a.g / f, a.b / f, a.a / f };
 }
 
-fn RGBA 
-operator *= (RGBA& a, float f)
+fn Color 
+operator *= (Color& a, float f)
 {
 	a = a * f;
 	return a;
 }
 
-fn RGBA 
-operator /= (RGBA& a, float f)
+fn Color 
+operator /= (Color& a, float f)
 {
 	a = a / f;
 	return a;
@@ -38,8 +38,8 @@ operator /= (RGBA& a, float f)
 
 namespace color
 {
-	fn RGBA
-	min(RGBA a, RGBA b)
+	fn Color
+	min(Color a, Color b)
 	{
 		return 
 		{ 
@@ -50,8 +50,8 @@ namespace color
 		};
 	}
 
-	fn RGBA
-	max(RGBA a, RGBA b)
+	fn Color
+	max(Color a, Color b)
 	{
 		return 
 		{ 
@@ -62,8 +62,8 @@ namespace color
 		};
 	}
 
-	fn RGBA
-	clamp(RGBA v, f32 min, f32 max)
+	fn Color
+	clamp(Color v, f32 min, f32 max)
 	{
 		return
 		{

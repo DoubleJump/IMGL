@@ -1,43 +1,56 @@
 namespace draw
 {
+	enum BlendMode
+	{
+		DEFAULT = 0,
+		LINEAR = 1
+	};
+
 	struct Context
 	{
-		renderer::PixelBuffer* buffer;
+		renderer::State* render_state;
 		RGBA8 color;
 		Mat3 transform;
-		//blend mode
+		BlendMode blend_mode;
 	};
 
 	global_var Context* ctx;
 
-	fn Context new_context(renderer::PixelBuffer& buffer)
+	fn Context* 
+	new_context(memory::Block* storage, renderer::State* render_state)
 	{
-		Context c;
-		c.buffer = &buffer;
-		c.color = { 0,0,0,255 };
-		c.transform = mat3::identity;
+		auto c = alloc_struct(storage, Context);
+		c->render_state = render_state;
+		c->color = { 0,0,0,255 };
+		c->transform = mat3::identity;
+		c->blend_mode = BlendMode::DEFAULT;
 		return c;
 	}
 
-	fn void set_context(Context& context)
+	fn void 
+	set_context(Context* context)
 	{
-		draw::ctx = &context;
+		draw::ctx = context;
 	}
 
-	fn void clear(RGBA8 color)
+	fn void 
+	clear(RGBA8 color)
 	{
-		auto buffer = draw::ctx->buffer;
+		auto buffer = draw::ctx->render_state->render_target->color;
 		memsize count = buffer->width * buffer->height;
+		auto pixels = (RGBA8*)buffer->pixels;
 		for(memsize i = 0; i < count; ++i)
 		{
-			buffer->pixels[i] = color;
+			*pixels++ = color;
 		}
 	}
 
-	fn void set_color(RGBA8 color)
+	fn void 
+	set_color(RGBA8 color)
 	{
 		draw::ctx->color = color;
 	}
+
 
 	fn RGBA8
 	linear_blend(RGBA8 src, RGBA8 dest)
@@ -60,10 +73,23 @@ namespace draw
 	}
 
 	fn void
+	fill_pixel(RGBA8* pixel)
+	{
+		switch(draw::ctx->blend_mode)
+		{
+		case BlendMode::DEFAULT:
+			*pixel = draw::ctx->color;
+		break;	
+		case BlendMode::LINEAR:
+			*pixel = linear_blend(draw::ctx->color, *pixel);
+		break;
+		}
+	}
+
+	fn void
 	fill_points(Vec2* points, i32 count, Mat3 m)
 	{
-		auto buffer = draw::ctx->buffer;
-		auto color = draw::ctx->color;
+		auto buffer = draw::ctx->render_state->render_target->color;
 
 		// these bounds can be calculated elsewhere and cached
 		auto min = mat3::mul_point(m, points[0]);
@@ -113,7 +139,7 @@ namespace draw
 				}
 				if(test)
 				{
-					*pixel = linear_blend(color, *pixel);
+					*pixel = linear_blend(draw::ctx->color, *pixel);
 				}
 				
 				++pixel;
@@ -126,8 +152,7 @@ namespace draw
 	fn void
 	fill_rect(f32 x, f32 y, f32 w, f32 h)
 	{
-		auto buffer = draw::ctx->buffer;
-		auto color = draw::ctx->color;
+		auto buffer = draw::ctx->render_state->render_target->color;
 
 		auto min_x = math::round_to_i32(x);
 		auto min_y = math::round_to_i32(y);
@@ -149,7 +174,7 @@ namespace draw
 			auto pixel = (RGBA8*)row;
 			for(int px = min_x; px < max_x; ++px)
 			{
-				*pixel = linear_blend(color, *pixel);
+				fill_pixel(pixel);
 				++pixel;
 			}
 
@@ -157,20 +182,30 @@ namespace draw
 		}
 	}
 
+	fn void
+	fill_rect(Rect r)
+	{
+		fill_rect(r.x, r.y, r.width, r.height);
+	}
+
+	
 	/*
 	fn void
 	line(Vec2 start, Vec2 end)
 	{
-		auto buffer = draw::ctx->buffer;
-		auto rgb = draw::ctx->color;
+		auto buffer = draw::ctx->render_state->pixel_buffer;
+		auto color = draw::ctx->color;
 
-		auto x0 = round_to_i32(start.x * buffer->pixels_per_world_unit);
-		auto x1 = round_to_i32(end.x * buffer->pixels_per_world_unit);
-		auto y0 = buffer->height - round_to_i32(start.y * buffer->pixels_per_world_unit);
-		auto y1 = buffer->height - round_to_i32(end.y * buffer->pixels_per_world_unit);
+		auto x0 = math::round_to_i32(start.x);
+		auto x1 = math::round_to_i32(end.x);
+		auto y0 = math::round_to_i32(start.y);
+		auto y1 = math::round_to_i32(end.y);
 
-		auto color = to_u32(rgba);
-
+		x0 = math::clamp(x0, 0, buffer->width);
+		x1 = math::clamp(x1, 0, buffer->width);
+		y0 = math::clamp(y0, 0, buffer->height);
+		y1 = math::clamp(y1, 0, buffer->height);
+		
 		i32 dx = abs(x1 - x0);		
 		i32 sx = -1;
 		if(x0 < x1)
@@ -188,7 +223,9 @@ namespace draw
  
 		for(;;)
 		{
-			pixel(buffer, x0, y0, color);
+			auto index = x0 + (y0 * buffer->width); 
+			auto pixel = (RGBA8*)(buffer->pixels) + index;
+			*pixel = linear_blend(color, *pixel);
 
 			if (x0 == x1 && y0 == y1) break;
 			e2 = 2 * err;
@@ -205,6 +242,23 @@ namespace draw
 		}
 	}
 
+	fn void
+	wire_points(Vec2* points, i32 count, Mat3 m)
+	{
+		auto buffer = draw::ctx->render_state->pixel_buffer;
+		auto color = draw::ctx->color;
+
+		Vec2 a = mat3::mul_point(m, points[0]);
+		for(i32 i = 1; i < count; ++i)
+		{
+			Vec2 b = mat3::mul_point(m, points[i]);
+			draw::line(a,b);
+			a = b;
+		}
+	}
+	*/
+
+	/*
 	internal void
 	wire_rect(PixelBuffer* buffer, Rect rect, RGBA rgba)
 	{

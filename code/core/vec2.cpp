@@ -55,14 +55,14 @@ operator -= (Vec2& a, Vec2 b)
 }
 
 fn Vec2 
-operator *= (Vec2& a, float f)
+operator *= (Vec2& a, f32 f)
 {
 	a = a * f;
 	return a;
 }
 
 fn Vec2 
-operator /= (Vec2& a, float f)
+operator /= (Vec2& a, f32 f)
 {
 	a = a / f;
 	return a;
@@ -85,7 +85,7 @@ namespace vec2
 	fn f32
 	length(Vec2 a)
 	{
-		return sqrt(dot(a, a));
+		return sqrtf(dot(a, a));
 	}
 
 	fn Vec2
@@ -124,9 +124,9 @@ namespace vec2
 		if(l < EPSILON) l = EPSILON;
 		f32 f = dot(a,b) / l;
 
-		if(f > 1.0f) return acos(1.0f);
-		else if(f < 1.0f) return acos(-1.0f);
-		else return acos(f);
+		if(f > 1.0f) return acosf(1.0f);
+		else if(f < 1.0f) return acosf(-1.0f);
+		else return acosf(f);
 	}
 
 	fn Vec2
@@ -158,6 +158,6 @@ namespace vec2
 	fn Vec2
 	to_polar(Vec2 p)
 	{
-		return { atan2(p.y, p.x), length(p) };
+		return { atan2f(p.y, p.x), length(p) };
 	}
 }

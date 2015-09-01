@@ -79,7 +79,7 @@ namespace vec2i
 	fn f32
 	length(Vec2i a)
 	{
-		return sqrt((f32)dot(a, a));
+		return sqrtf((f32)dot(a, a));
 	}
 
 	fn f32
@@ -89,9 +89,9 @@ namespace vec2i
 		if(l < EPSILON) l = EPSILON;
 		f32 f = dot(a,b) / l;
 
-		if(f > 1.0f) return acos(1.0f);
-		else if(f < 1.0f) return acos(-1.0f);
-		else return acos(f);
+		if(f > 1.0f) return acosf(1.0f);
+		else if(f < 1.0f) return acosf(-1.0f);
+		else return acosf(f);
 	}
 
 	fn Vec2i

@@ -1,14 +1,44 @@
-#include "compilers.h"
-#include "typedefs.h"
+#include "../core/compilers.h"
+#include "../core/typedefs.h"
+#include <stdlib.h> 
 
+/*
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
-#include "stb_image.h"
+#include "../libs/stb_image.h"
+*/
 
-#include "app.cpp"
+struct ThreadContext
+{
+	int placeholder;
+};
+
+#if BUILD_INTERNAL
+
+struct DEBUG_FileResult
+{
+	u32 size;
+	void* contents;
+};
+
+internal DEBUG_FileResult 
+DEBUG_read_file(ThreadContext* thread, char* file_name);
+
+internal b32 
+DEBUG_write_file(ThreadContext* thread, char* file_name, u32 size, void* memory);
+
+internal void 
+DEBUG_free_file(ThreadContext* thread, void* memory);
+
+#endif
+
+#include "../demos/diamond.cpp"
+//#include "../demos/cells.cpp"
+
+
 #include <windows.h>
-#include "win32_fileio.cpp"
-#include "win32_opengl.cpp"
+#include "fileio.cpp"
+#include "opengl.cpp"
 
 namespace win32
 {
@@ -170,6 +200,19 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	
 	HDC device_context = GetDC(window);
 
+	// ALLOCATE app MEMORY
+	
+	#if BUILD_fn
+		LPVOID base_address = (LPVOID)TERABYTES(2);
+	#else
+		LPVOID base_address = 0;
+	#endif
+	
+	memory::Block storage = {};
+	storage.used = 0;
+	storage.size = MEGABYTES(64);
+	storage.base = VirtualAlloc(base_address, storage.size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+
 	// TIMING
 	int monitor_refresh_hz = 60;
 	int win32_refresh_rate = GetDeviceCaps(device_context, VREFRESH);
@@ -199,60 +242,38 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 
 	// INIT INPUT
 
-	input::Devices devices = {};
-
-
-	// ALLOCATE app MEMORY
-	
-	#if BUILD_fn
-		LPVOID base_address = (LPVOID)TERABYTES(2);
-	#else
-		LPVOID base_address = 0;
-	#endif
-	
-	memory::Block storage = {};
-	storage.used = 0;
-	storage.size = MEGABYTES(64);
-	storage.base = VirtualAlloc(base_address, storage.size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+	auto devices = alloc_struct(&storage, input::Devices);
 
 	// INIT OPENGL
 
-	opengl::State* render_state = alloc_struct(storage, opengl::State);
+	auto render_state = alloc_struct(&storage, renderer::State);
 	render_state->thread = &thread;
-	render_state->device_context = device_context;
-	
-	renderer::PixelBuffer* pixel_buffer = alloc_struct(storage, renderer::PixelBuffer);
-	pixel_buffer->width = X_RES;
-	pixel_buffer->height = Y_RES;
-	pixel_buffer->pixels_per_world_unit = 1;
-	pixel_buffer->bytes_per_pixel = 3;
-	pixel_buffer->pitch = pixel_buffer->width * pixel_buffer->bytes_per_pixel;
-	pixel_buffer->pixels = alloc_array(storage, RGB8, pixel_buffer->width * pixel_buffer->height);
-
- 	opengl::create_context(storage, *render_state, *pixel_buffer);
+	render_state->view = { 0,0, (f32)X_RES, (f32)Y_RES };
+	//render_state->pixel_buffer = renderer::new_pixel_buffer(&storage, X_RES, Y_RES, renderer::TextureFormat::RGBA);
+ 	opengl::create_context(&storage, render_state, device_context);
  	
  	// INIT APP
 
- 	app::State* app_state = alloc_struct(storage, app::State);
+ 	app::State* app_state = alloc_struct(&storage, app::State);
  	app_state->time = app_time;
- 	app::init(storage, devices, *app_state, *pixel_buffer);
+ 	app::init(&storage, devices, render_state, app_state);
 
 	// MAIN LOOP
 
 	is_running = true;
 	while(is_running)
 	{
-		auto& keyboard = devices.keyboard;
-		update_device_buttons(keyboard.buttons, ARRAY_COUNT(keyboard.buttons));
+		auto keyboard = &(devices->keyboard);
+		update_device_buttons(keyboard->buttons, ARRAY_COUNT(keyboard->buttons));
 
 		POINT mouse_pos;
 		GetCursorPos(&mouse_pos);
 		ScreenToClient(window, &mouse_pos);
 
-		auto& mouse = devices.mouse;
-		mouse.position.x = (f32)mouse_pos.x;
-		mouse.position.y = (f32)mouse_pos.y;
-		update_device_buttons(mouse.buttons, ARRAY_COUNT(mouse.buttons));
+		auto mouse = &(devices->mouse);
+		mouse->position.x = (f32)mouse_pos.x;
+		mouse->position.y = (f32)mouse_pos.y;
+		update_device_buttons(mouse->buttons, ARRAY_COUNT(mouse->buttons));
 		
 		if(app_state->quit)
 		{
@@ -274,25 +295,25 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 				case WM_LBUTTONDOWN:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(mouse.left, true);
+					process_key_event(mouse->left, true);
 					break;
 				}
 				case WM_LBUTTONUP:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(mouse.left, false);
+					process_key_event(mouse->left, false);
 					break;
 				}
 				case WM_RBUTTONDOWN:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(mouse.right, true);
+					process_key_event(mouse->right, true);
 					break;
 				}
 				case WM_RBUTTONUP:
 				{
 					//b32 was_down = ((message.lParam & (1 << 30)) == 0);
-					process_key_event(mouse.right, false);
+					process_key_event(mouse->right, false);
 					break;
 				}
 				case WM_SYSKEYDOWN:
@@ -306,23 +327,27 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 
 					if(key_code == 'W' || key_code == VK_UP)
 					{
-						process_key_event(keyboard.up, is_down);
+						process_key_event(keyboard->up, is_down);
 					}
 					else if(key_code == 'S' || key_code == VK_DOWN)
 					{
-						process_key_event(keyboard.down, is_down);
+						process_key_event(keyboard->down, is_down);
 					}
 					else if(key_code == 'A' || key_code == VK_LEFT)
 					{
-						process_key_event(keyboard.left, is_down);
+						process_key_event(keyboard->left, is_down);
 					}
 					else if(key_code == 'D' || key_code == VK_RIGHT)
 					{
-						process_key_event(keyboard.right, is_down);
+						process_key_event(keyboard->right, is_down);
 					}
 					else if(key_code == 'R')
 					{
-						process_key_event(keyboard.R, is_down);
+						process_key_event(keyboard->R, is_down);
+					}
+					else if(key_code == 'Q')
+					{
+						process_key_event(keyboard->Q, is_down);
 					}
 					else if(key_code == VK_ESCAPE)
 					{
@@ -348,7 +373,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	
 		app_time.dt = target_seconds_per_frame;
 		app_state->time = app_time;
-		app::update(storage, devices, *pixel_buffer, *app_state);
+		app::update(&storage, devices, render_state, app_state);
 	
 		auto work_seconds = get_seconds_elapsed(last_ticks, get_current_ticks());				
 		
@@ -383,7 +408,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 		f64 ms_per_frame = 1000.0f * get_seconds_elapsed(last_ticks, end_ticks);
 		last_ticks = end_ticks;
 
-		opengl::render(*render_state, *pixel_buffer);
+		opengl::render(render_state, device_context);
 
 		flip_ticks = get_current_ticks();
 

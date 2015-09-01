@@ -74,7 +74,7 @@ namespace mat3
 	    r.m[8] = m[0] * m[4] - m[1] * m[3];
 
 	    f32 det = m[0] * r[0] + m[1] * r[3] + m[2] * r[6];
-	    if(abs(det) <= EPSILON)
+	    if(fabs(det) <= EPSILON)
 	    {
 	        return identity;
 	    }
@@ -151,8 +151,8 @@ namespace mat3
 	set_rotation(Mat3& m, f32 r)
 	{
 		f32 theta = r * DEG2RAD;
-		f32 st = sin(theta);
-		f32 ct = cos(theta);
+		f32 st = sinf(theta);
+		f32 ct = cosf(theta);
 
 		m.m[0] = ct;
 		m.m[1] = st;
@@ -171,8 +171,8 @@ namespace mat3
 	compose(f32 x, f32 y, f32 sx, f32 sy, f32 rot)
 	{
 		f32 theta = rot * DEG2RAD;
-		f32 st = sin(theta);
-		f32 ct = cos(theta);
+		f32 st = sinf(theta);
+		f32 ct = cosf(theta);
 
 		Mat3 r;
 		r.m[0] = ct * sx;
@@ -193,8 +193,8 @@ namespace mat3
 	compose(Vec2 p, Vec2 s, f32 rot)
 	{
 		f32 theta = rot * DEG2RAD;
-		f32 st = sin(theta);
-		f32 ct = cos(theta);
+		f32 st = sinf(theta);
+		f32 ct = cosf(theta);
 
 		Mat3 r;
 		r.m[0] = ct * s.x;

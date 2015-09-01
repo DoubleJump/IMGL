@@ -24,54 +24,72 @@ namespace scene
 	global_var Scene* ctx;
 
 	fn void
-	set_context(Scene& context)
+	set_context(Scene* context)
 	{
-		scene::ctx = &context;
+		scene::ctx = context;
 	}
 
-	fn Entity&
+	fn Entity*
+	get_entity(i32 id)
+	{
+		ASSERT(id >= 0 && id <= scene::ctx->num_entities);
+		return &(scene::ctx->entities[id]);
+	}
+
+	fn Entity*
 	new_entity()
 	{
 		i32 num_entities = scene::ctx->num_entities;
-		auto& e = scene::ctx->entities[num_entities];
-		e.id = num_entities;
-		e.parent = 0;
-		e.active = true;
-		e.dirty = true;
-		e.position = {0,0};
-		e.scale = {1,1};
-		e.rotation = 0;
+		auto e = get_entity(num_entities);
+		e->id = num_entities;
+		e->parent = 0;
+		e->active = true;
+		e->dirty = true;
+		e->position = {0,0};
+		e->scale = {1,1};
+		e->rotation = 0;
 
 		for(i32 i = 0; i < 8; ++i)
 		{
-			e.children[i] = -1;
+			e->children[i] = -1;
 		}
 
-		scene::ctx->entities[e.id] = e;
+		scene::ctx->entities[e->id] = *e;
 		scene::ctx->num_entities++;
 		return e;
 	}
 
-	fn void 
-	set_transform(Entity& e, Vec2 position, Vec2 scale, f32 rotation)
+	fn Scene* 
+	new_scene(memory::Block* storage, i32 entity_count)
 	{
-		e.position = position;
-		e.scale = scale;
-		e.rotation = rotation;
-		e.dirty = true;
+		auto s = alloc_struct(storage, Scene);
+		s->num_entities = 0;
+		s->entities = alloc_array(storage, Entity, entity_count);
+		scene::set_context(s);
+		scene::new_entity();
+		return s;
+	}
+
+	fn void 
+	set_transform(Entity* e, Vec2 position, Vec2 scale, f32 rotation)
+	{
+		e->position = position;
+		e->scale = scale;
+		e->rotation = rotation;
+		e->dirty = true;
 	}
 
 	fn void
-	set_parent(Scene& scene, Entity& entity, Entity& parent)
+	set_parent(Scene* scene, Entity* entity, Entity* parent)
 	{
-		if(parent.id == entity.parent) return;
-		if(entity.parent != 0) //remove from children
+		if(parent->id == entity->parent) return;
+		if(entity->parent != 0) //remove from children
 		{
-			auto& current_parent = scene.entities[entity.parent];
+			auto current_parent = get_entity(entity->parent);
 			for(i32 i = 0; i < 8; ++i)
 			{
-				auto& child = current_parent.children[i];
-				if(child == entity.id)
+				auto child = current_parent->children[i];
+				if(child == entity->id)
 				{
 					child = -1;
 					break;
@@ -79,79 +97,74 @@ namespace scene
 			}
 		}
 
-		entity.parent = parent.id;
+		entity->parent = parent->id;
 		for(i32 i = 0; i < 8; ++i)
 		{
-			auto& child = parent.children[i];
+			auto child = parent->children[i];
 			if(child == -1)
 			{
-				child = entity.id;
+				child = entity->id;
 				break;
 			}
 		}
 	}
 
 	fn void
-	clear_parent(Entity& e)
+	clear_parent(Entity* e)
 	{
-		if(e.parent == 0) return;
-		auto& current_parent = scene::ctx->entities[e.parent];
+		if(e->parent == 0) return;
+		auto current_parent = get_entity(e->parent);
 		for(i32 i = 0; i < 8; ++i)
 		{
-			auto& child = current_parent.children[i];
-			if(child == e.id)
+			auto child = current_parent->children[i];
+			if(child == e->id)
 			{
 				child = -1;
 				break;
 			}
 		}
-		e.parent = 0;
+		e->parent = 0;
 	}
 
 	fn void
-	update_entity(Entity& e)
+	update_entity(Entity* e)
 	{
-		if(!e.active) return;
-		auto& parent = scene::ctx->entities[e.parent];
+		if(!e->active) return;
+		auto parent = get_entity(e->parent);
 
-		if(e.dirty)
+		if(e->dirty)
 		{
-			e.local_matrix = mat3::compose(e.position, e.scale, e.rotation);
+			e->local_matrix = mat3::compose(e->position, e->scale, e->rotation);
 		}
-		e.world_matrix = parent.world_matrix * e.local_matrix;
+		e->world_matrix = parent->world_matrix * e->local_matrix;
 		
 		for(i32 i = 0; i < 8; ++i)
 		{
-			auto id = e.children[i];
+			auto id = e->children[i];
 			if(id != -1)
 			{
-				auto& child = scene::ctx->entities[id];
+				auto child = get_entity(id);
 				update_entity(child);
 			}
 		}
-		e.dirty = false;
+		e->dirty = false;
 	}
 	
 
-	fn void
-	init(memory::Block& storage, i32 count)
-	{
-		scene::ctx->num_entities = 0;
-		scene::ctx->entities = alloc_array(storage, Entity, count);
-		scene::ctx->entities[0] = scene::new_entity();
-	}
+
 
 	fn void
 	update()
 	{
-		auto& root = scene::ctx->entities[0];
-		if(root.dirty)
+		auto root = get_entity(0);
+		if(root->dirty)
 		{
-			root.world_matrix = mat3::compose(root.position, root.scale, root.rotation);
+			root->world_matrix = mat3::compose(root->position, root->scale, root->rotation);
 		}
 		for(i32 i = 1; i < scene::ctx->num_entities; ++i)
 		{
-			update_entity(scene::ctx->entities[i]);
+			auto entity = get_entity(i);
+			update_entity(entity);
 		}
 	}
 

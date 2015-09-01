@@ -1,0 +1,452 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/C/IMGL/code/win32/opengl.cpp",
+			"settings":
+			{
+				"buffer_size": 13038,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/IMGL/code/demos/diamond.cpp",
+			"settings":
+			{
+				"buffer_size": 2517,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "shell.bat",
+			"settings":
+			{
+				"buffer_size": 135,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Skipping... (no re",
+			"settings":
+			{
+				"buffer_size": 18,
+				"line_ending": "Windows",
+				"name": "Build output",
+				"scratch": true
+			}
+		}
+	],
+	"build_system": "Packages/User/Shell.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/User/Shell.sublime-build",
+					""
+				],
+				[
+					"Packages/User/Shell.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/User/Shell.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 83.0,
+		"last_filter": "Package Control: install",
+		"selected_items":
+		[
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 456.0
+	},
+	"console":
+	{
+		"height": 132.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/IMGL"
+	],
+	"file_history":
+	[
+		"/C/IMGL/misc/shell.bat",
+		"/C/IMGL/misc/build.bat",
+		"/C/IMGL/code/core/mat3.cpp",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Gareth/Documents/sublime-text-2-buildview/settings.py",
+		"/C/Users/Gareth/Documents/sublime-text-2-buildview/pipe_views.py",
+		"/C/Users/Gareth/Documents/sublime-text-2-buildview/commands.py",
+		"/C/IMGL/misc/run.bat",
+		"/C/IMGL/build/run.bat",
+		"/C/IMGL/code/core/vec2i.cpp",
+		"/C/IMGL/code/core/vec3.cpp",
+		"/C/IMGL/code/core/vec2.cpp",
+		"/C/IMGL/code/core/quat.cpp",
+		"/C/IMGL/code/core/random.cpp",
+		"/C/cmder/config/aliases",
+		"/c/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Shell.sublime-build",
+		"/C/winGL/code/win32/opengl_extensions.cpp",
+		"/C/winGL/code/demos/diamond.cpp",
+		"/C/winGL/code/win32/opengl.cpp",
+		"/C/winGL/code/core/texture.cpp",
+		"/C/winGL/code/win32/glext.h",
+		"/c/Users/Gareth/Desktop/JS.sublime-build",
+		"/c/Users/Gareth/Desktop/JS",
+		"/c/shells/wingl.bat",
+		"/C/winGL/misc/shell.bat",
+		"/C/winGL/misc/build.bat",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Shell.sublime-build",
+		"/C/Users/Gareth/Desktop/CPP.sublime-build",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Distraction Free.sublime-settings"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"panel",
+			"ctrl+b"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/C/IMGL/code/win32/opengl.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13038,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12620,
+								12620
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 9039.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/IMGL/code/demos/diamond.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2517,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1821,
+								1821
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 274.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "shell.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 135,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								135,
+								135
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 3,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								18,
+								18
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.728404099561,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": false,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/Shell.sublime-build",
+	"project": "IMGL.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"shel",
+				"misc\\shell.bat"
+			],
+			[
+				"ba",
+				"misc\\build.bat"
+			],
+			[
+				"diam",
+				"code\\demos\\diamond.cpp"
+			],
+			[
+				"bui",
+				"misc\\build.bat"
+			],
+			[
+				"mat",
+				"code\\core\\mat3.cpp"
+			],
+			[
+				"vec",
+				"code\\core\\vec2i.cpp"
+			],
+			[
+				"vc",
+				"code\\core\\vec3.cpp"
+			],
+			[
+				"qua",
+				"code\\core\\quat.cpp"
+			],
+			[
+				"rand",
+				"code\\core\\random.cpp"
+			],
+			[
+				"shell",
+				"misc\\shell.bat"
+			],
+			[
+				"ope",
+				"code\\win32\\opengl.cpp"
+			],
+			[
+				"exte",
+				"code\\win32\\opengl_extensions.cpp"
+			],
+			[
+				"tex",
+				"code\\core\\texture.cpp"
+			],
+			[
+				"op",
+				"code\\win32\\opengl.cpp"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 496.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 150.0,
+	"status_bar_visible": false,
+	"template_settings":
+	{
+	}
+}

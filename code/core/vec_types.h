@@ -39,6 +39,8 @@ struct Rect
 	f32 x, y, width, height;
 };
 
+
+
 struct Quat
 {
 	f32 x, y, z, w;
@@ -87,7 +89,7 @@ struct AABB
 	Vec3 min, max;
 };
 
-struct RGBA
+struct Color
 {
 	f32 r, g, b, a;
 };

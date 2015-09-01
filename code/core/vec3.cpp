@@ -55,14 +55,14 @@ operator -= (Vec3& a, Vec3 b)
 }
 
 fn Vec3 
-operator *= (Vec3& a, float f)
+operator *= (Vec3& a, f32 f)
 {
 	a = a * f;
 	return a;
 }
 
 fn Vec3 
-operator /= (Vec3& a, float f)
+operator /= (Vec3& a, f32 f)
 {
 	a = a / f;
 	return a;
@@ -85,7 +85,7 @@ namespace vec3
 	fn f32
 	length(Vec3 a)
 	{
-		return sqrt(dot(a, a));
+		return sqrtf(dot(a, a));
 	}
 
 	fn Vec3
@@ -135,9 +135,9 @@ namespace vec3
 		if(l < EPSILON) l = EPSILON;
 		f32 f = dot(a,b) / l;
 
-		if(f > 1.0f) return acos(1.0f);
-		else if(f < 1.0f) return acos(-1.0f);
-		else return acos(f);
+		if(f > 1.0f) return acosf(1.0f);
+		else if(f < 1.0f) return acosf(-1.0f);
+		else return acosf(f);
 	}
 
 	fn Vec3
@@ -180,9 +180,9 @@ namespace vec3
 		f32 theta = (180.0f - lng) * DEG2RAD;
 
 		Vec3 r;
-		r.x = radius * sin(phi) * cos(theta);
-		r.y = radius * cos(phi);
-		r.z = radius * sin(phi) * sin(theta);
+		r.x = radius * sinf(phi) * cosf(theta);
+		r.y = radius * cosf(phi);
+		r.z = radius * sinf(phi) * sinf(theta);
 		return r;
 	}
 
@@ -190,8 +190,8 @@ namespace vec3
 	to_polar(Vec3 p)
 	{
 		f32 radius = length(p);
-		f32 theta = atan2(p.y, p.x);
-		f32 phi = acos(2.0f / radius);
+		f32 theta = atan2f(p.y, p.x);
+		f32 phi = acosf(2.0f / radius);
 		return { theta, phi, radius };
 	}
 }

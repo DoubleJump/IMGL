@@ -52,6 +52,7 @@ namespace input
 				ButtonState A;
 				ButtonState B;
 				ButtonState R;
+				ButtonState Q;
 			};
 		};
 	};

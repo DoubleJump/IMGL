@@ -38,10 +38,10 @@ namespace random
 		return r;
 	}
 
-	fn RGBA
-	range(RGBA min, RGBA max)
+	fn Color
+	range(Color min, Color max)
 	{
-		RGBA r;
+		Color r;
 		r.r = rand() * (max.r - min.r) + min.r;
 		r.g = rand() * (max.g - min.g) + min.g;
 		r.b = rand() * (max.b - min.b) + min.b;
@@ -77,8 +77,8 @@ namespace random
 		return range(v - fuzz, v + fuzz);
 	}
 
-	fn RGBA
-	fuzzy(RGBA c, f32 fuzz)
+	fn Color
+	fuzzy(Color c, f32 fuzz)
 	{
 		return range(c - fuzz, c + fuzz);
 	}
@@ -89,7 +89,7 @@ namespace random
 	{
 		f32 x = range(-1.0f,1.0f);
 		f32 y = range(-1.0f,1.0f);
-		f32 l = 1.0f / sqrt(x * x + y * y);
+		f32 l = 1.0f / sqrtf(x * x + y * y);
 		return { x * l, y * l };
 	}
 
@@ -99,7 +99,7 @@ namespace random
 		f32 x = range(-1.0f,1.0f);
 		f32 y = range(-1.0f,1.0f);
 		f32 z = range(-1.0f,1.0f);
-		f32 l = 1.0f / sqrt(x * x + y * y + z * z);
+		f32 l = 1.0f / sqrtf(x * x + y * y + z * z);
 		return { x * l, y * l, z * l };
 	}
 }

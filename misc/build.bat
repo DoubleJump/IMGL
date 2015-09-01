@@ -1,6 +1,6 @@
-@echo off
+	@echo off
 
-set ENTRY_POINT=..\code\win32_platform_layer.cpp
+set ENTRY_POINT= c:\IMGL\code\win32\platform_layer.cpp
 
 set WARNINGS=-WX -W4 -wd4505 -wd4201 -wd4100 -wd4189
 set OPTIMSATIONS=-Od -Oi
@@ -23,6 +23,9 @@ pushd ..\build
 popd
 
 
+REM BUILD_SLOW: 1 = asserts and such. 0 = no slow code allowed
+REM BUILD_INTERNAL: 1 = base virtual memory etc
+REM BUILD_WIN32: 1 = windows build
 REM -nologo: gets rid of made by microsoft
 REM -WX: warnings as errors
 REM -W4: warning level 4

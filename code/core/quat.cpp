@@ -49,14 +49,14 @@ operator *= (Quat& a, Quat b)
 }
 
 fn Quat 
-operator *= (Quat& a, float f)
+operator *= (Quat& a, f32 f)
 {
 	a = a * f;
 	return a;
 }
 
 fn Quat 
-operator /= (Quat& a, float f)
+operator /= (Quat& a, f32 f)
 {
 	a = a / f;
 	return a;
@@ -81,7 +81,7 @@ namespace quat
 	fn f32
 	length(Quat a)
 	{
-		return sqrt(dot(a, a));
+		return sqrtf(dot(a, a));
 	}
 
 	fn Quat
@@ -115,12 +115,12 @@ namespace quat
 		f32 yr = y * DEG2RAD / 2.0f;
 		f32 zr = z * DEG2RAD / 2.0f;
 
-		f32 sx = sin(xr);
-		f32 sy = sin(yr);
-		f32 sz = sin(zr);
-		f32 cx = cos(xr);
-		f32 cy = cos(yr);
-		f32 cz = cos(zr);
+		f32 sx = sinf(xr);
+		f32 sy = sinf(yr);
+		f32 sz = sinf(zr);
+		f32 cx = cosf(xr);
+		f32 cy = cosf(yr);
+		f32 cz = cosf(zr);
 
 		Quat r = 
 		{
@@ -141,13 +141,13 @@ namespace quat
 		f32 test = q.x * q.y + q.z * q.w;
 		if(test > tolerance) // North singluarity
 		{ 
-			v.x = 2.0f * atan2(q.x, q.w);
+			v.x = 2.0f * atan2f(q.x, q.w);
 			v.y = PI / 2.0f; 
 			v.z = 0;
 		}
 		else if(test < -tolerance) // South singularity
 		{ 
-			v.x = -2.0f * atan2(q.x, q.w);
+			v.x = -2.0f * atan2f(q.x, q.w);
 			v.y = -PI / 2.0f;
 			v.z = 0;
 		}
@@ -157,9 +157,9 @@ namespace quat
 		    f32 sqy = q.y * q.y;
 		    f32 sqz = q.z * q.z;
 		    
-		    v.x = atan2(2.0f * q.y * q.w - 2.0f * q.x * q.z , 1.0f - 2.0f * sqy - 2.0f * sqz);
-			v.y = asin(2.0f * test);
-			v.z = atan2(2.0f * q.x * q.w - 2.0f * q.y * q.z , 1.0f - 2.0f * sqx - 2.0f * sqz);
+		    v.x = atan2f(2.0f * q.y * q.w - 2.0f * q.x * q.z , 1.0f - 2.0f * sqy - 2.0f * sqz);
+			v.y = asinf(2.0f * test);
+			v.z = atan2f(2.0f * q.x * q.w - 2.0f * q.y * q.z , 1.0f - 2.0f * sqx - 2.0f * sqz);
 		}
 		return v;
 	}
@@ -168,12 +168,12 @@ namespace quat
 	angle_axis(f32 angle, Vec3 axis)
 	{
 		f32 half_angle = 0.5f * (angle * DEG2RAD);
-		f32 sin_half_angle = sin(half_angle);
+		f32 sin_half_angle = sinf(half_angle);
 		axis *= sin_half_angle;
 		
 		return
 		{
-			cos(half_angle),
+			cosf(half_angle),
 			axis.x,
 			axis.y,
 			axis.z
@@ -186,8 +186,8 @@ namespace quat
 		f32 l = sqr_length(q);
 		if(l > 0.0f)
 		{
-			f32 i = 1.0f / sqrt(l);
-			f32 angle = 2.0f * acos(q.w) * RAD2DEG;
+			f32 i = 1.0f / sqrtf(l);
+			f32 angle = 2.0f * acosf(q.w) * RAD2DEG;
 			Vec3 axis = { q.x, q.y, q.z };
 
 			return { angle, axis * i };

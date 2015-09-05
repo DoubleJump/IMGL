@@ -71,8 +71,8 @@ namespace app
 		state->loop = 0.0f;
 
 		memsize cell_count = state->cells_x * state->cells_y;
-		state->cells = alloc_array(storage, Cell, cell_count);
-		state->last_cells = alloc_array(storage, Cell, cell_count);
+		state->cells = push_array(storage, Cell, cell_count);
+		state->last_cells = push_array(storage, Cell, cell_count);
 		
 		for(int i = 0; i < cell_count; ++i)
 		{

@@ -8,10 +8,42 @@
 	"buffers":
 	[
 		{
+			"file": "/C/IMGL/code/win32/platform_layer.cpp",
+			"settings":
+			{
+				"buffer_size": 9420,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build.bat",
+			"settings":
+			{
+				"buffer_size": 1556,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "/C/IMGL/code/win32/opengl.cpp",
 			"settings":
 			{
-				"buffer_size": 13038,
+				"buffer_size": 11575,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/IMGL/code/core/mesh.cpp",
+			"settings":
+			{
+				"buffer_size": 3892,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/webdev/gblib/src/js/gl/mesh.js",
+			"settings":
+			{
+				"buffer_size": 2344,
 				"line_ending": "Windows"
 			}
 		},
@@ -19,23 +51,23 @@
 			"file": "/C/IMGL/code/demos/diamond.cpp",
 			"settings":
 			{
-				"buffer_size": 2517,
+				"buffer_size": 2032,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "shell.bat",
+			"file": "/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 			"settings":
 			{
-				"buffer_size": 135,
-				"line_ending": "Windows"
+				"buffer_size": 409,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "Skipping... (no re",
+			"contents": "platform_layer.cpp\n[Fin[Finished in 4.7s]",
 			"settings":
 			{
-				"buffer_size": 18,
+				"buffer_size": 41,
 				"line_ending": "Windows",
 				"name": "Build output",
 				"scratch": true
@@ -107,20 +139,30 @@
 	],
 	"file_history":
 	[
-		"/C/IMGL/misc/shell.bat",
+		"/C/IMGL/code/core/memory.cpp",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Shell.sublime-build",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/C/IMGL/misc/build.bat",
+		"/C/IMGL/code/core/renderer.cpp",
+		"/C/IMGL/code/core/typedefs.h",
+		"/C/IMGL/code/win32/fileio.cpp",
+		"/C/IMGL/code/core/vec_types.h",
+		"/C/IMGL/code/core/vec3.cpp",
+		"/C/IMGL/code/core/texture.cpp",
+		"/C/IMGL/code/core/core.cpp",
+		"/C/IMGL/code/core/compilers.h",
+		"/C/IMGL/code/win32/opengl.cpp",
+		"/C/IMGL/misc/shell.bat",
+		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
 		"/C/IMGL/code/core/mat3.cpp",
 		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
-		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
-		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
-		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/Gareth/Documents/sublime-text-2-buildview/settings.py",
 		"/C/Users/Gareth/Documents/sublime-text-2-buildview/pipe_views.py",
 		"/C/Users/Gareth/Documents/sublime-text-2-buildview/commands.py",
 		"/C/IMGL/misc/run.bat",
 		"/C/IMGL/build/run.bat",
 		"/C/IMGL/code/core/vec2i.cpp",
-		"/C/IMGL/code/core/vec3.cpp",
 		"/C/IMGL/code/core/vec2.cpp",
 		"/C/IMGL/code/core/quat.cpp",
 		"/C/IMGL/code/core/random.cpp",
@@ -136,13 +178,12 @@
 		"/c/shells/wingl.bat",
 		"/C/winGL/misc/shell.bat",
 		"/C/winGL/misc/build.bat",
-		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Shell.sublime-build",
 		"/C/Users/Gareth/Desktop/CPP.sublime-build",
 		"/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Distraction Free.sublime-settings"
 	],
 	"find":
 	{
-		"height": 25.0
+		"height": 24.0
 	},
 	"find_in_files":
 	{
@@ -156,6 +197,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"MASK_BIT_SET",
 			"panel",
 			"ctrl+b"
 		],
@@ -165,6 +207,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"FLAG_SET"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -175,24 +218,24 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/C/IMGL/code/win32/opengl.cpp",
+					"file": "/C/IMGL/code/win32/platform_layer.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13038,
+						"buffer_size": 9420,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12620,
-								12620
+								3565,
+								3565
 							]
 						],
 						"settings":
@@ -201,56 +244,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 9039.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/C/IMGL/code/demos/diamond.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2517,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1821,
-								1821
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 274.0,
+						"translation.y": 2969.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "shell.bat",
+					"buffer": 1,
+					"file": "build.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 135,
+						"buffer_size": 1556,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								135,
-								135
+								971,
+								971
 							]
 						],
 						"settings":
@@ -258,10 +272,155 @@
 							"syntax": "Packages/Batch File/Batch File.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 44.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/IMGL/code/win32/opengl.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11575,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10723,
+								10723
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 7338.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/IMGL/code/core/mesh.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3892,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1692,
+								1692
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1584.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/webdev/gblib/src/js/gl/mesh.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2344,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1498,
+								1345
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 623.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/IMGL/code/demos/diamond.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2032,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								890,
+								890
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 600.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/C/Users/Gareth/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 409,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								409,
+								409
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -271,19 +430,19 @@
 			"sheets":
 			[
 				{
-					"buffer": 3,
+					"buffer": 7,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 18,
+						"buffer_size": 41,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								18,
-								18
+								41,
+								41
 							]
 						],
 						"settings":
@@ -294,7 +453,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -302,7 +461,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 25.0
+		"height": 24.0
 	},
 	"input":
 	{
@@ -350,7 +509,7 @@
 	"project": "IMGL.sublime-project",
 	"replace":
 	{
-		"height": 46.0
+		"height": 44.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -359,6 +518,78 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"mem",
+				"code\\core\\memory.cpp"
+			],
+			[
+				"buil",
+				"misc\\build.bat"
+			],
+			[
+				"bi",
+				"misc\\build.bat"
+			],
+			[
+				"file",
+				"code\\win32\\fileio.cpp"
+			],
+			[
+				"typ",
+				"code\\core\\typedefs.h"
+			],
+			[
+				"vec",
+				"code\\core\\vec_types.h"
+			],
+			[
+				"ve",
+				"code\\core\\vec3.cpp"
+			],
+			[
+				"me",
+				"code\\core\\memory.cpp"
+			],
+			[
+				"type",
+				"code\\core\\typedefs.h"
+			],
+			[
+				"text",
+				"code\\core\\texture.cpp"
+			],
+			[
+				"mesh",
+				"code\\core\\mesh.cpp"
+			],
+			[
+				"ope",
+				"code\\win32\\opengl.cpp"
+			],
+			[
+				"core",
+				"code\\core\\core.cpp"
+			],
+			[
+				"fi",
+				"code\\win32\\fileio.cpp"
+			],
+			[
+				"render",
+				"code\\core\\renderer.cpp"
+			],
+			[
+				"com",
+				"code\\core\\compilers.h"
+			],
+			[
+				"pla",
+				"code\\win32\\platform_layer.cpp"
+			],
+			[
+				"bui",
+				"misc\\build.bat"
+			],
 			[
 				"shel",
 				"misc\\shell.bat"
@@ -372,16 +603,8 @@
 				"code\\demos\\diamond.cpp"
 			],
 			[
-				"bui",
-				"misc\\build.bat"
-			],
-			[
 				"mat",
 				"code\\core\\mat3.cpp"
-			],
-			[
-				"vec",
-				"code\\core\\vec2i.cpp"
 			],
 			[
 				"vc",
@@ -398,10 +621,6 @@
 			[
 				"shell",
 				"misc\\shell.bat"
-			],
-			[
-				"ope",
-				"code\\win32\\opengl.cpp"
 			],
 			[
 				"exte",

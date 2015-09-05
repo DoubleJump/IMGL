@@ -8,31 +8,68 @@ namespace opengl
 	// SHADER
 
 	fn void
-	link(Shader* s, const char* vert_source, const char* frag_source)
+	link(memory::Block* storage, Shader* s)
 	{
 		GLuint vert_shader = glCreateShader(GL_VERTEX_SHADER); 
-		
-		glShaderSource(vert_shader, 1, (GLchar**)&vert_source, 0);
+		glShaderSource(vert_shader, 1, (GLchar**)&(s->vertex_src.data), 0);
 		glCompileShader(vert_shader);
-		GLint status;
-		glGetShaderiv(vert_shader, GL_COMPILE_STATUS, &status);
 
-		ASSERT(status != GL_FALSE && "Vertex shader compile error");
+		#if DEBUG
+		{
+			GLint status;
+			glGetShaderiv(vert_shader, GL_COMPILE_STATUS, &status);
+			if(status == GL_FALSE)
+			{
+				GLint log_length = 0;
+				glGetShaderiv(vert_shader, GL_INFO_LOG_LENGTH, &log_length);
+				auto error_log = push_array(storage, GLchar, log_length);
+				glGetShaderInfoLog(vert_shader, log_length, &log_length, error_log);
+				printf(error_log);
+				FAIL("Vertex shader compile error");
+			}
+		}
+		#endif
 
 		GLuint frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(frag_shader, 1, (GLchar**)&frag_source, 0);
+		glShaderSource(frag_shader, 1, (GLchar**)&(s->fragment_src.data), 0);
 		glCompileShader(frag_shader);
-		glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &status);
 
-		ASSERT(status != GL_FALSE && "Fragment shader compile error");
+		#if DEBUG
+		{
+			GLint status;
+			glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &status);
+			if(status == GL_FALSE)
+			{
+				GLint log_length = 0;
+				glGetShaderiv(frag_shader, GL_INFO_LOG_LENGTH, &log_length);
+				auto error_log = push_array(storage, GLchar, log_length);
+				glGetShaderInfoLog(frag_shader, log_length, &log_length, error_log);
+				printf(error_log);
+				FAIL("Fragment shader compile error");
+			}
+		}
+		#endif
 
 		GLuint program = glCreateProgram();
 		glAttachShader(program, vert_shader);
 		glAttachShader(program, frag_shader);
 		glLinkProgram(program);
-		glGetProgramiv(program, GL_LINK_STATUS, &status);
-	
-		ASSERT(status != GL_FALSE && "Shader link error");
+
+		#if DEBUG
+		{
+			GLint status;
+			glGetProgramiv(program, GL_LINK_STATUS, &status);
+			if(status == GL_FALSE)
+			{
+				GLint log_length = 0;
+				glGetProgramiv(frag_shader, GL_INFO_LOG_LENGTH, &log_length);
+				auto error_log = push_array(storage, GLchar, log_length);
+				glGetProgramInfoLog(program, log_length, &log_length, error_log);
+				printf(error_log);
+				FAIL("Shader link error");
+			}
+		}
+		#endif
 	
 		glDetachShader(program, vert_shader);
 		glDetachShader(program, frag_shader);
@@ -40,16 +77,57 @@ namespace opengl
 		glDeleteShader(frag_shader);
 
 		s->id = program;
-		//shader->num_attributes = glGetProgramParameter(program, GL_ACTIVE_ATTRIBUTES);
-	    //shader->num_uniforms = glGetProgramParameter(program, GL_ACTIVE_UNIFORMS); 
+
+
+		// Loop through the shader and build an array of uniforms that caches all the lookups
+
+		//glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &s->num_attributes);
+	    glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &s->num_uniforms);
+
+	    //printf("Shader Attributes: %i \n", s->num_attributes);  
+	    //printf("Shader Uniforms: %i \n", s->num_uniforms);
+
+	    //s->attributes = push_array(storage, shader::Attribute, s->num_attributes);
+	    s->uniforms = push_array(storage, shader::Uniform, s->num_uniforms);
+
+	    char name[256];
+	    GLsizei name_len;
+		GLint size;
+		GLenum type;
+
+		shader::Uniform* uniform = &s->uniforms[0];
+	    for(i32 i = 0; i < s->num_uniforms; ++i)
+	    {
+	    	glGetActiveUniform(program, i, 256, &name_len, &size, &type, &name[0]);
+
+	    	uniform->name = math::hash(&name[0], name_len);
+	    	uniform->location = i;
+	    	uniform->dirty = false;
+	    	uniform->value = push_bytes(storage, size * 4);
+
+	    	//TODO: add the rest of the data types
+	    	switch(type)
+	    	{
+	    		case GL_FLOAT: uniform->type = shader::DataType::F32; break;
+	    		case GL_FLOAT_VEC2: uniform->type = shader::DataType::VEC2; break;	
+	    		case GL_FLOAT_VEC3: uniform->type = shader::DataType::VEC3; break; 
+	    		case GL_FLOAT_VEC4: uniform->type = shader::DataType::VEC4; break;
+	    		case GL_SAMPLER_2D: uniform->type = shader::DataType::TEXTURE; break;	
+	    	}
+
+	    	uniform++;
+	    	//puts(name);
+	    }
+
+	    s->linked = true;
 	}
 
 	fn void
 	use(Shader* s)
 	{
+		ASSERT(s->id != 0 && s->linked, "Shader being used is not linked");
 		glUseProgram(s->id);
 	}
-
 
 	
 
@@ -78,13 +156,14 @@ namespace opengl
 		}
 
 		GLenum error = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		ASSERT(error == GL_FRAMEBUFFER_COMPLETE && "Invalid frame buffer");
+		ASSERT(error == GL_FRAMEBUFFER_COMPLETE, "Invalid frame buffer");
 	}
 
 	fn void
 	link(Target* rt)
 	{
 		glGenFramebuffers(1, &rt->frame_buffer);
+		rt->linked = true;
 	}
 
 	fn void
@@ -103,6 +182,7 @@ namespace opengl
 		}
 		else
 		{
+			ASSERT(rt->frame_buffer != 0 && rt->linked, "Render target is not linked");
 			glBindFramebuffer(GL_FRAMEBUFFER, rt->frame_buffer);
 			if(rt->depth)
 			{
@@ -114,9 +194,11 @@ namespace opengl
 			}
 
 			//_t.set_viewport(rt.bounds);
+			/*
 			if(clear)
 			{
 			}
+			*/
 		}
 	}
 
@@ -170,10 +252,10 @@ namespace opengl
 		auto wrap_x = get_wrap_mode(s.wrap_x);
 		auto wrap_y = get_wrap_mode(s.wrap_y);
 
-		ASSERT(up_filter != 0);
-		ASSERT(down_filter != 0);
-		ASSERT(wrap_x != 0);
-		ASSERT(wrap_y != 0);
+		ASSERT(up_filter != 0, "Up filter not set");
+		ASSERT(down_filter != 0, "Down filter not set");
+		ASSERT(wrap_x != 0, "Wrap x not set");
+		ASSERT(wrap_y != 0, "Wrap y not set");
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, s.min_mip_level);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL,  s.max_mip_level);
@@ -207,12 +289,14 @@ namespace opengl
 		{
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
+		t->dirty = false;
 	}
 
 	fn void
 	update(Texture* t, Rect r)
 	{
 		glTexSubImage2D(GL_TEXTURE_2D, 0, (GLint)r.x, (GLint)r.y, (GLint)r.width, (GLint)r.height, get_texture_format(t->format), GL_UNSIGNED_BYTE, t->pixels);
+		t->dirty = false;
 	}
 
 	fn void
@@ -223,11 +307,14 @@ namespace opengl
 
 		update(t);
 		set_sampler(t->sampler);
+
+		t->linked = true;
 	}
 
 	fn void
 	use(Texture* t, i32 slot)
 	{
+		ASSERT(t->id != 0 && t->linked, "Texture not linked");
 		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_2D, t->id);
 	}
@@ -241,9 +328,11 @@ namespace opengl
 		glGenBuffers(1, &m->vbo);
 		glGenBuffers(1, &m->ibo);
 
-		ASSERT(m->vao != 0);
-		ASSERT(m->vbo != 0);
-		ASSERT(m->ibo != 0);
+		ASSERT(m->vao != 0, "Could create vertex array object");
+		ASSERT(m->vbo != 0, "Could create vertex buffer object");
+		ASSERT(m->ibo != 0, "Could create index buffer object");
+
+		m->linked = true;
 	}
 
 	fn GLuint 
@@ -277,11 +366,9 @@ namespace opengl
 	fn void 
 	update(Mesh* m)
 	{
-		memsize pos_bytes 	 = sizeof(Vec3)  * m->vertex_count;
-		memsize uv_bytes 	 = sizeof(Vec2)  * m->vertex_count;
-		memsize col_bytes 	 = sizeof(Color) * m->vertex_count;
-		memsize index_bytes  = sizeof(u16)   * m->index_count;
-		memsize vertex_bytes = pos_bytes + uv_bytes + col_bytes;
+		memsize vertex_bytes = m->vertex_array_size;
+
+		GLuint attribute_pointer = 0;
 		memsize offset = 0;
 
 		auto update_mode = get_mesh_update_mode(m);
@@ -289,29 +376,46 @@ namespace opengl
 		glBindVertexArray(m->vao);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m->vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertex_bytes, m->memory, update_mode);
+		glBufferData(GL_ARRAY_BUFFER, m->vertex_array_size, m->memory, update_mode);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
-		glEnableVertexAttribArray(0);
-		offset += pos_bytes;
+		if(FLAG_SET(m->attribute_mask, mesh::VertexAttribute::POSITION))
+		{
+			glVertexAttribPointer(attribute_pointer, 3, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
+			glEnableVertexAttribArray(attribute_pointer);
+			offset += sizeof(f32) * 3 * m->vertex_count;
+			attribute_pointer++;
+		}
+		if(FLAG_SET(m->attribute_mask, mesh::VertexAttribute::NORMAL))
+		{
+			glVertexAttribPointer(attribute_pointer, 3, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
+			glEnableVertexAttribArray(attribute_pointer);
+			offset += sizeof(f32) * 3 * m->vertex_count;
+			attribute_pointer++;
+		}
+		if(FLAG_SET(m->attribute_mask, mesh::VertexAttribute::UV))
+		{
+			glVertexAttribPointer(attribute_pointer, 2, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
+			glEnableVertexAttribArray(attribute_pointer);
+			offset += sizeof(f32) * 2 * m->vertex_count;
+			attribute_pointer++;
+		}
+		if(FLAG_SET(m->attribute_mask, mesh::VertexAttribute::UV2))
+		{
+			glVertexAttribPointer(attribute_pointer, 2, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
+			glEnableVertexAttribArray(attribute_pointer);
+			offset += sizeof(f32) * 2 * m->vertex_count;
+			attribute_pointer++;
+		}
+		if(FLAG_SET(m->attribute_mask, mesh::VertexAttribute::COLOR))
+		{
+			glVertexAttribPointer(attribute_pointer, 4, GL_FLOAT, GL_TRUE, 0, (const void*)offset);
+			glEnableVertexAttribArray(attribute_pointer);
+			offset += sizeof(f32) * 4 * m->vertex_count;
+			attribute_pointer++;
+		}
 		
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (const void*)offset);
-		glEnableVertexAttribArray(1);
-		offset += uv_bytes;
-
-		//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, mesh->uvs2);
-		//glEnableVertexAttribArray(2);
-		//offset += uv_bytes;
-
-		//glVertexAttribPointer(3, 4, GL_FLOAT, GL_TRUE, 0, (const void*)offset);
-		//glEnableVertexAttribArray(3);
-		//offset += col_bytes;
-
-		//glVertexAttribPointer(4, 3, GL_FLOAT, GL_TRUE, 0, mesh->normals);
-		//glEnableVertexAttribArray(4);
-
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m->ibo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_bytes, m->indices, update_mode);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m->index_array_size, m->indices, update_mode);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -329,7 +433,7 @@ namespace opengl
 
 
 	fn HGLRC
-	create_context(memory::Block* storage, State* state, HDC device_context)
+	create_context(State* state, HDC device_context)
 	{
 		PIXELFORMATDESCRIPTOR pfd = {};
 
@@ -342,24 +446,23 @@ namespace opengl
 		pfd.cStencilBits = 8;
 
 		auto pixel_format = ChoosePixelFormat(device_context, &pfd); 
-		ASSERT(pixel_format && "Could not choose pixel format");
+		ASSERT(pixel_format, "Could not choose pixel format");
 		
 		if(!SetPixelFormat(device_context, pixel_format, &pfd))
 		{
-			ASSERT(!"Could not set pixel format");
+			FAIL("Could not set pixel format");
 		}
 
 		// windows only returns the old opengl 1.2 context
 		auto gl11 = wglCreateContext(device_context); 
-		ASSERT(gl11 && "Could not create opengl 1.1 context");
+		ASSERT(gl11, "Could not create opengl 1.1 context");
 		
 		if(!wglMakeCurrent(device_context, gl11))
 		{
-			ASSERT(!"Could not set temp context");
+			FAIL("Could not set opengl 1.1 context");
 		}
 
 		opengl::load_extensions();
-		
 		
 		int major_version = 3; int minor_version = 3;
 		int major, minor;
@@ -370,12 +473,12 @@ namespace opengl
 		{
 			if(major < major_version)
 			{
-				ASSERT(!"Incorrect opengl major version");
+				FAIL("Incorrect opengl major version");
 			}
 
 			if(minor < minor_version)
 			{
-				ASSERT(!"Incorrect opengl minor version");
+				FAIL("Incorrect opengl minor version");
 			}
 		}
 		
@@ -388,9 +491,8 @@ namespace opengl
 		};
 
 		HGLRC gl = wglCreateContextAttribsARB(device_context, 0, attributes);
-		ASSERT(gl && "Could not create ARB context");
+		ASSERT(gl, "Could not create ARB context");
 		
-
 		// remove the context we had to create initially
 		wglMakeCurrent(0,0); 
 		wglDeleteContext(gl11);
@@ -398,8 +500,13 @@ namespace opengl
 		// bind the up to date opengl context
 		if(!wglMakeCurrent(device_context, gl))
 		{
-			ASSERT(!"Could not make device")
+			FAIL("Could not make device");
 		}
+
+		set_viewport(state->view);
+
+		return gl;
+
 		
 		// Depth
 		
@@ -424,102 +531,40 @@ namespace opengl
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		*/
 		
-		// MESH DATA
-
-		
-		Vec3 verts[] = 
-		{ 
-			{ -1.0f, -1.0f, 0.0f },
-			{  1.0f, -1.0f, 0.0f },
-			{ -1.0f,  1.0f, 0.0f },
-			{  1.0f,  1.0f, 0.0f }
-		};
-		Vec2 uvs[] = 
-		{
-			{ 0.0f, 1.0f },
-			{ 1.0f, 1.0f },
-			{ 0.0f, 0.0f },
-			{ 1.0f, 0.0f }
-		};
-		u16 indices[] = 
-		{
-			0,1,3,0,3,2
-		};
-
-		state->mesh = alloc_struct(storage, Mesh);
-		state->mesh->draw_type = mesh::DrawType::TRIANGLES;
-		state->mesh->update_mode = mesh::UpdateMode::STATIC;
-		state->mesh->vertex_count = ARRAY_COUNT(verts);
-		state->mesh->index_count = ARRAY_COUNT(indices);
-
-		memsize pos_bytes = sizeof(Vec3) * state->mesh->vertex_count;
-		memsize uv_bytes = sizeof(Vec2) * state->mesh->vertex_count;
-		//memsize col_bytes = sizeof(Color) * state->mesh->vertex_count;
-		memsize index_bytes = sizeof(u16) * state->mesh->index_count;
-		memsize vertex_bytes = pos_bytes + uv_bytes;// + col_bytes;
-
-		state->mesh->memory = memory::alloc(storage, vertex_bytes);
-		u8* offset = (u8*)state->mesh->memory;
-
-		// POSITIONS 
-
-		state->mesh->positions = (Vec3*)offset;
-		memory::copy(verts, state->mesh->positions, pos_bytes);
-		offset += pos_bytes;
-
-		// UV1
-
-		state->mesh->uvs = (Vec2*)offset;
-		memory::copy(uvs, state->mesh->uvs, uv_bytes);
-		offset += uv_bytes;
-		
-		// UV2
-		
-		// COLOR
-		/*
-		mesh->colors = (app::Color*)offset;
-		app::mem_copy(colors, mesh->colors, col_bytes);
-		offset += col_bytes;
-		*/
-				
-		// NORMALS
-		
-		// INDICES
-
-		state->mesh->indices = (u16*)offset;
-		memory::copy(indices, state->mesh->indices, index_bytes);
-
-		// BIND MESH
-
-		link(state->mesh);
-		update(state->mesh);
+		// SCREEN MESH
+		//state->mesh = mesh::quad(storage, 2.0f, 2.0f, 0.0f);
+		//link(state->mesh);
+		//update(state->mesh);
 
 		// FRAME BUFFER TEXTURE
 
-		state->render_target = alloc_struct(storage, Target);
+		/*
+		state->render_target = push_struct(storage, Target);
 		auto color_target = texture::create_pixel_buffer(storage, (i32)state->view.width, (i32)state->view.height);
 
 		link(color_target);
 		link(state->render_target);
 		set_render_target_attachment(state->render_target, target::Type::COLOR, color_target);
+		*/
 
 		// FRAME BUFFER SHADER
-		state->render_target->shader = shader::create(storage);
+		/*
+		state->render_target->shader = push_struct(storage, Shader);
 		{
-			auto vert_file = DEBUG_read_file(state->thread, "..\\data\\frame.vert");
+			auto vert_file = file::open(state->thread, "..\\data\\frame.vert");
 			auto vert_source = (const char*)vert_file.contents;
 
-			auto frag_file = DEBUG_read_file(state->thread, "..\\data\\frame.frag");
+			auto frag_file = file::open(state->thread, "..\\data\\frame.frag");
 			auto frag_source = (const char*)frag_file.contents;
-			link(state->render_target->shader, vert_source, frag_source);
+			link(storage, state->render_target->shader, vert_source, frag_source);
 		}
+		*/
 
-		set_viewport(state->view);
+		//set_viewport(state->view);
 		//glClearColor(0.05f, 0.1f, 0.2f, 1.0f);
 		//glClear(GL_COLOR_BUFFER_BIT);
 
 			
-		return gl;
 	}
 
 	fn void
@@ -538,14 +583,48 @@ namespace opengl
 	fn void
 	render(State* state, HDC device_context)
 	{
-		use(state->render_target->shader);
-		use(state->render_target->color, 0);
-		update(state->render_target->color, state->view);
-
-		draw_mesh_elements(state->mesh);
-
-		reset_gl_state();
+		if(!state->shader->linked) link(state->storage, state->shader);
+		if(!state->screen_mesh->linked) link(state->screen_mesh);
+		if(state->screen_mesh->dirty) update(state->screen_mesh);
 		
+		if(!state->texture->linked) link(state->texture);
+		/*
+		if(!state->target->linked)
+		{
+			link(state->target);
+			set_render_target_attachment(state->target, target::Type::COLOR, state->texture);
+		}
+		*/
+
+		auto s = state->shader;
+		use(s);
+
+		auto info = &s->uniforms[0];
+		for(i32 i = 0; i < s->num_uniforms; ++i)
+		{
+			if(info->dirty)
+			{
+				switch(info->type)
+				{
+					case shader::DataType::F32:
+					{
+						glUniform1f(info->location, *((f32*)info->value)); //not sure we have to cast?
+						break;
+					}
+					default: break;
+				}
+				info->dirty = false;
+			}
+			info++;
+		}
+
+		//use(state->target->color, 0);
+		//update(state->target->color, state->view);
+
+		use(state->texture, 0);
+		update(state->texture);
+		draw_mesh_elements(state->screen_mesh);
+		reset_gl_state();
 		SwapBuffers(device_context);
 	}
 

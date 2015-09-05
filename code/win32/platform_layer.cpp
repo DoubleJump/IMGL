@@ -1,44 +1,37 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "../core/compilers.h"
 #include "../core/typedefs.h"
-#include <stdlib.h> 
+#include <stdlib.h>
+#include <stdio.h>
 
-/*
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_ONLY_PNG
-#include "../libs/stb_image.h"
-*/
+#include "../core/memory.cpp"
+#include "../core/math.cpp"
+#include "../core/vec_types.h"
+#include "../core/mat3.cpp"
+#include "../core/vec2.cpp"
+#include "../core/vec2i.cpp"
+#include "../core/vec3.cpp"
+#include "../core/color.cpp"
+#include "../core/quat.cpp"
+#include "../core/random.cpp"
+#include "../core/rect.cpp"
+#include "../core/input.cpp"
+#include "../core/texture.cpp"
+#include "../core/shader.cpp"
+#include "../core/mesh.cpp"
+#include "../core/render_target.cpp"
+#include "../core/renderer.cpp"
 
-struct ThreadContext
-{
-	int placeholder;
-};
+#include "../core/platform.h"
 
-#if BUILD_INTERNAL
-
-struct DEBUG_FileResult
-{
-	u32 size;
-	void* contents;
-};
-
-internal DEBUG_FileResult 
-DEBUG_read_file(ThreadContext* thread, char* file_name);
-
-internal b32 
-DEBUG_write_file(ThreadContext* thread, char* file_name, u32 size, void* memory);
-
-internal void 
-DEBUG_free_file(ThreadContext* thread, void* memory);
-
-#endif
-
+#include "../core/assets.cpp"
 #include "../demos/diamond.cpp"
-//#include "../demos/cells.cpp"
-
 
 #include <windows.h>
 #include "fileio.cpp"
 #include "opengl.cpp"
+
 
 namespace win32
 {
@@ -130,7 +123,6 @@ namespace win32
 		{
 			case WM_SIZE:
 			{
-				//OutputDebugStringA("WM_SIZE\n");
 				break;
 			}
 			case WM_CLOSE:
@@ -140,7 +132,6 @@ namespace win32
 			}
 			case WM_ACTIVATEAPP:
 			{
-				//OutputDebugStringA("WM_ACTIVATEAPP\n");
 				break;
 			}
 			case WM_DESTROY:
@@ -164,7 +155,20 @@ using namespace win32;
 int CALLBACK
 WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int show_type)
 {
-	ThreadContext thread = {};
+	//ThreadContext thread = {};
+
+	int X_RES = 640 / 2;
+	int Y_RES = 1136 / 2;
+
+	//1366 768
+
+	//DEBUG CONSOLE
+	#if DEBUG
+		AllocConsole();
+    	freopen("CONOUT$", "wb", stdout);
+    	HWND console = GetConsoleWindow();
+    	MoveWindow(console, 1366-500, 0, 500, 768, TRUE);
+    #endif
 
 	// CREATE & REGISTER WINDOW
 
@@ -175,43 +179,44 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	window_class.lpszClassName = "WinGLClass";
 
 	auto WIN_REGISTER_SUCCESS = RegisterClass(&window_class);
-	ASSERT(WIN_REGISTER_SUCCESS && "Could not register window");
-
-	int X_RES = 640 / 2;
-	int Y_RES = 1136 / 2;
+	ASSERT(WIN_REGISTER_SUCCESS, "Could not register window");
 
 	HWND window = CreateWindowEx
 	(
 		0,
 		window_class.lpszClassName,
-		"ONYX",
+		"IMGL",
 		WS_OVERLAPPED | WS_POPUP | WS_VISIBLE | WS_BORDER,
-		100, 100, // x y
+		300, 100, // x y
 		X_RES, Y_RES, // width, height
 		0,
 		0,
 		instance,
 		0
 	);
-	ASSERT(window && "Could not create window");
+	ASSERT(window, "Could not create window");
+	HDC device_context = GetDC(window);
 
 	//HIDE CURSOR
 	ShowCursor(FALSE);
-	
-	HDC device_context = GetDC(window);
 
 	// ALLOCATE app MEMORY
 	
-	#if BUILD_fn
+	#if DEBUG
 		LPVOID base_address = (LPVOID)TERABYTES(2);
 	#else
 		LPVOID base_address = 0;
 	#endif
-	
+
+
 	memory::Block storage = {};
 	storage.used = 0;
-	storage.size = MEGABYTES(64);
+	storage.size = MEGABYTES(32);
 	storage.base = VirtualAlloc(base_address, storage.size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+
+	// PLATFORM
+	auto platform = push_struct(&storage, Platform);
+ 	platform->storage = &storage;
 
 	// TIMING
 	int monitor_refresh_hz = 60;
@@ -222,7 +227,6 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	}
 	f32 app_update_hz = monitor_refresh_hz / 2.0f;
 	f32 target_seconds_per_frame = 1.0f / app_update_hz;
-
 
 	LARGE_INTEGER perf_counter_frequency_result;
 	QueryPerformanceFrequency(&perf_counter_frequency_result);
@@ -237,45 +241,44 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	auto last_cycle_count = __rdtsc();
 	auto flip_ticks = get_current_ticks();
 
-	app::Time app_time = {};
-	app_time.scale = 1.0f;
+	platform->time.scale = 1.0f;
+ 	platform->time.elapsed = 0.0f;
 
 	// INIT INPUT
 
-	auto devices = alloc_struct(&storage, input::Devices);
+	platform->devices = push_struct(&storage, input::Devices);
+	//auto devices = push_struct(&storage, input::Devices);
 
 	// INIT OPENGL
 
-	auto render_state = alloc_struct(&storage, renderer::State);
-	render_state->thread = &thread;
-	render_state->view = { 0,0, (f32)X_RES, (f32)Y_RES };
-	//render_state->pixel_buffer = renderer::new_pixel_buffer(&storage, X_RES, Y_RES, renderer::TextureFormat::RGBA);
- 	opengl::create_context(&storage, render_state, device_context);
+	platform->render_state = push_struct(&storage, renderer::State);
+	platform->render_state->storage = &storage;
+	platform->render_state->view = { 0,0, (f32)X_RES, (f32)Y_RES };
+ 	opengl::create_context(platform->render_state, device_context);
  	
  	// INIT APP
-
- 	app::State* app_state = alloc_struct(&storage, app::State);
- 	app_state->time = app_time;
- 	app::init(&storage, devices, render_state, app_state);
+	
+ 	app::State* app_state = push_struct(&storage, app::State);
+ 	app::init(platform, app_state);
 
 	// MAIN LOOP
 
 	is_running = true;
 	while(is_running)
 	{
-		auto keyboard = &(devices->keyboard);
+		auto keyboard = &(platform->devices->keyboard);
 		update_device_buttons(keyboard->buttons, ARRAY_COUNT(keyboard->buttons));
 
 		POINT mouse_pos;
 		GetCursorPos(&mouse_pos);
 		ScreenToClient(window, &mouse_pos);
 
-		auto mouse = &(devices->mouse);
+		auto mouse = &(platform->devices->mouse);
 		mouse->position.x = (f32)mouse_pos.x;
 		mouse->position.y = (f32)mouse_pos.y;
 		update_device_buttons(mouse->buttons, ARRAY_COUNT(mouse->buttons));
 		
-		if(app_state->quit)
+		if(platform->quit)
 		{
 			is_running = false;
 		}
@@ -371,9 +374,10 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 		}
 
 	
-		app_time.dt = target_seconds_per_frame;
-		app_state->time = app_time;
-		app::update(&storage, devices, render_state, app_state);
+		platform->time.dt = target_seconds_per_frame;
+		platform->time.elapsed += target_seconds_per_frame;
+		//platform->time.elapsed = app_time;
+		app::update(platform, app_state);
 	
 		auto work_seconds = get_seconds_elapsed(last_ticks, get_current_ticks());				
 		
@@ -408,7 +412,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 		f64 ms_per_frame = 1000.0f * get_seconds_elapsed(last_ticks, end_ticks);
 		last_ticks = end_ticks;
 
-		opengl::render(render_state, device_context);
+		opengl::render(platform->render_state, device_context);
 
 		flip_ticks = get_current_ticks();
 
@@ -417,6 +421,10 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 		last_cycle_count = end_cycle_count;	
 	}
 
+	#if DEBUG
+		fclose(stdout);
+		FreeConsole();
+    #endif
 	//opengl::quit(device_context, gl);
 	ReleaseDC(window, device_context);
 

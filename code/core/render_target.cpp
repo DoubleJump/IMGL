@@ -18,5 +18,6 @@ namespace renderer
 		Texture* depth;
 		Texture* stencil;
 		Shader* shader;
+		b32 linked;
 	};
 }

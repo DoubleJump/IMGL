@@ -32,7 +32,7 @@ namespace scene
 	fn Entity*
 	get_entity(i32 id)
 	{
-		ASSERT(id >= 0 && id <= scene::ctx->num_entities);
+		ASSERT(id >= 0 && id <= scene::ctx->num_entities, ("%i is not a valid entity id", id));
 		return &(scene::ctx->entities[id]);
 	}
 
@@ -62,9 +62,9 @@ namespace scene
 	fn Scene* 
 	new_scene(memory::Block* storage, i32 entity_count)
 	{
-		auto s = alloc_struct(storage, Scene);
+		auto s = push_struct(storage, Scene);
 		s->num_entities = 0;
-		s->entities = alloc_array(storage, Entity, entity_count);
+		s->entities = push_array(storage, Entity, entity_count);
 		scene::set_context(s);
 		scene::new_entity();
 		return s;

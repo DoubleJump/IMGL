@@ -19,7 +19,7 @@ namespace draw
 	fn Context* 
 	new_context(memory::Block* storage, renderer::State* render_state)
 	{
-		auto c = alloc_struct(storage, Context);
+		auto c = push_struct(storage, Context);
 		c->render_state = render_state;
 		c->color = { 0,0,0,255 };
 		c->transform = mat3::identity;
@@ -36,7 +36,7 @@ namespace draw
 	fn void 
 	clear(RGBA8 color)
 	{
-		auto buffer = draw::ctx->render_state->render_target->color;
+		auto buffer = draw::ctx->render_state->texture;
 		memsize count = buffer->width * buffer->height;
 		auto pixels = (RGBA8*)buffer->pixels;
 		for(memsize i = 0; i < count; ++i)
@@ -89,7 +89,7 @@ namespace draw
 	fn void
 	fill_points(Vec2* points, i32 count, Mat3 m)
 	{
-		auto buffer = draw::ctx->render_state->render_target->color;
+		auto buffer = draw::ctx->render_state->texture;
 
 		// these bounds can be calculated elsewhere and cached
 		auto min = mat3::mul_point(m, points[0]);
@@ -152,7 +152,7 @@ namespace draw
 	fn void
 	fill_rect(f32 x, f32 y, f32 w, f32 h)
 	{
-		auto buffer = draw::ctx->render_state->render_target->color;
+		auto buffer = draw::ctx->render_state->texture;
 
 		auto min_x = math::round_to_i32(x);
 		auto min_y = math::round_to_i32(y);

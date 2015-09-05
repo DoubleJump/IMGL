@@ -6,6 +6,9 @@ namespace memory
 		memsize used;
 		void* base;
 	};
+
+	//Block* ctx;
+
 	fn void
 	set_block(Block* block, memsize size, void* base)
 	{
@@ -15,12 +18,24 @@ namespace memory
 	}
 
 	fn void*
-	alloc(Block* block, memsize size)
+	push_bytes(Block* block, memsize size)
 	{
-		ASSERT((block->used + size) <= block->size);
+		#if BUILD_INTERNAL
+			if((block->used + size) <= block->size)
+			{
+				printf("Tried to allocate %zu bytes but only %zu bytes available in block\n", size, block->size - block->used);
+				FAIL;
+			}
+		#endif
+
 		u8* base = (u8*)block->base;
 		void* address = (void*)(base + block->used);
 		block->used += size;
+
+		#if BUILD_INTERNAL
+			printf("Memory Used: %.1f/%.1f KB\n", (f32)block->used / 1024.0f, (f32)block->size / 1024.0f);
+		#endif
+
 		return address;
 	}
 
@@ -46,8 +61,8 @@ namespace memory
 	}
 }
 
-#define alloc_struct(block, type) (type*)memory::alloc(block, sizeof(type))
-#define alloc_array(block, type, count) (type*)memory::alloc(block, (count) * sizeof(type))
+#define push_struct(block, type) (type*)memory::push_bytes(block, sizeof(type))
+#define push_array(block, type, count) (type*)memory::push_bytes(block, (count) * sizeof(type))
 
 #define clear_struct(s, type) memory::clear(s, sizeof(type))
 #define clear_array(a, type, count) memory::clear(a, sizeof(type) * count)

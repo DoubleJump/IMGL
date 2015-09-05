@@ -24,10 +24,20 @@ typedef double f64;
 
 typedef size_t memsize;
 
-#if BUILD_SLOW
-#define ASSERT(expression) if(!(expression)) {*(int*)0 = 0; }
+typedef u32 AssetID;
+
+struct string
+{
+	memsize length;
+	char* data;
+};
+
+#if BUILD_DEBUG
+#define FAIL(expr) printf(expr); printf("Error in file: %s line: %d \n ", __FILE__, __LINE__ ); *(int*)0 = 0;
+#define ASSERT(expr, msg) if(!(expression)) { FAIL(msg) } 
 #else
-#define ASSERT(expression)
+#define FAIL
+#define ASSERT(expr, msg)
 #endif
 
 #define KILOBYTES(value) ((value)*1024LL)
@@ -36,6 +46,7 @@ typedef size_t memsize;
 #define TERABYTES(value) (GIGABYTES(value)*1024LL)
 #define ARRAY_COUNT(Array) (sizeof(Array) / sizeof((Array)[0]))
 
+#define FLAG_SET(mask, flag) ((flag & mask) == flag)
 #define LOOP(index, count) for(int index = 0; index < count; ++index)
 
 #endif

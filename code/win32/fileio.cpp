@@ -1,73 +1,125 @@
-internal DEBUG_FileResult 
-DEBUG_read_file(ThreadContext* thread, char* file_name)
+namespace file
 {
-	DEBUG_FileResult result = {};
-
-	auto file_handle = CreateFileA(file_name, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
-	if(file_handle == INVALID_HANDLE_VALUE)
+	fn i32
+	read_i32(File* f)
 	{
-		ASSERT(!"Could not open file");
+		auto r = *((i32*)f->offset);
+		f->offset += sizeof(i32);
+		return r;
+	}
+
+	fn i32*
+	read_i32_array(File* f)
+	{
+		auto length = read_i32(f);
+		auto r = (i32*)f->offset;
+		f->offset += sizeof(i32) * length;
+		return r;
+	}
+
+	fn f32
+	read_f32(File* f)
+	{
+		auto r = *((f32*)f->offset);
+		f->offset += sizeof(f32);
+		return r;
+	}
+
+	fn f32*
+	read_f32_array(File* f)
+	{
+		auto length = read_i32(f);
+		auto r = (f32*)f->offset;
+		f->offset += sizeof(f32) * length;
+		return r;
+	}
+
+	fn string
+	read_string(File* f)
+	{
+		string r;
+		r.length = read_i32(f);
+		r.data = (char*)f->offset;
+		f->offset += r.length;
+		return r;
+	}
+
+	fn void
+	set_offset(File* f, memsize offset)
+	{
+		f->offset = (u8*)f->contents + offset;
+	}
+
+	fn void
+	close(File* f)
+	{
+		if(f->contents)
+		{
+			VirtualFree(f->contents, 0, MEM_RESERVE);
+			f->contents = 0;
+			f->size = 0;
+			f->offset = 0;
+		}
+	}
+
+	fn File 
+	open(char* path)
+	{
+		File result = {};
+
+		auto handle = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
+		if(handle == INVALID_HANDLE_VALUE)
+		{
+			FAIL("Could not open file: %s\n", path);
+		}
+
+		LARGE_INTEGER file_size;
+		auto success = GetFileSizeEx(handle, &file_size);
+		if(!success)
+		{
+			FAIL("Could not get file size");
+		}
+			
+		auto file_size32 = math::safe_truncate_u64(file_size.QuadPart); // Dont open files larger than 4GB
+		result.contents = VirtualAlloc(0, file_size32, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+		if(!result.contents)
+		{
+			FAIL("Could not read file contents into memory");
+		}
+
+		DWORD bytes_read;
+		success = ReadFile(handle, result.contents, file_size32, &bytes_read, 0) && (file_size32 == bytes_read);
+		if(!success)
+		{
+			file::close(&result);
+		}
+
+		result.size = file_size32;
+		result.offset = (u8*)result.contents;
+
+		CloseHandle(handle);
 		return result;
 	}
 
-	LARGE_INTEGER file_size;
-	auto success = GetFileSizeEx(file_handle, &file_size);
-	if(!success)
+	fn b32
+	write(char* path, File* f)
 	{
-		ASSERT(!"Could not get file size");
-		return result;
-	}
-		
-	auto file_size32 = math::safe_truncate_u64(file_size.QuadPart); // Dont open files larger than 4GB
-	result.contents = VirtualAlloc(0, file_size32, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-	if(!result.contents)
-	{
-		ASSERT(!"Could not read file contents into memory");
-		return result;
-	}
+		auto handle = CreateFileA(path, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
+		if(handle == INVALID_HANDLE_VALUE)
+		{
+			FAIL("Could not create file at path: %s \n", path);
+			return false;
+		}
 
-	DWORD bytes_read;
-	success = ReadFile(file_handle, result.contents, file_size32, &bytes_read, 0) && (file_size32 == bytes_read);
-	if(!success)
-	{
-		DEBUG_free_file(thread, result.contents);
-		result.contents = 0;
-		return result;
-	}
+		DWORD bytes_written;
+		auto success = WriteFile(handle, f->contents, f->size, &bytes_written, 0);
+		if(!success)
+		{
+			FAIL("Could not write memory to file");
+			return false;
+		}
 
-	result.size = file_size32;
-
-	CloseHandle(file_handle);
-	return result;
-}
-
-internal b32
-DEBUG_write_file(ThreadContext* thread, char* file_name, u32 size, void* memory)
-{
-	auto file_handle = CreateFileA(file_name, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
-	if(file_handle == INVALID_HANDLE_VALUE)
-	{
-		ASSERT(!"Could not create file");
-		return false;
-	}
-
-	DWORD bytes_written;
-	auto success = WriteFile(file_handle, memory, size, &bytes_written, 0);
-	if(!success)
-	{
-		ASSERT(!"Could not write memory to file");
-		return false;
-	}
-
-	CloseHandle(file_handle);
-	return (bytes_written == size);
-}
-
-internal void
-DEBUG_free_file(ThreadContext* thread, void* memory)
-{
-	if(memory)
-	{
-		VirtualFree(memory, 0, MEM_RESERVE);
+		CloseHandle(handle);
+		return (bytes_written == f->size);
 	}
 }

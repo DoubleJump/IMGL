@@ -78,7 +78,7 @@ namespace math
 	fn u32
 	safe_truncate_u64(u64 value)
 	{
-		ASSERT(value <= UINT32_MAX);
+		ASSERT(value <= UINT32_MAX, "Value is greater that UINT32_MAX");
 		return (u32)value;
 	}
 
@@ -147,6 +147,21 @@ namespace math
         {
         	c = *str++;
         	if(!c) break;
+            hash = ((hash << 5) + hash) + c;
+        }
+
+        return hash;
+    }
+
+	fn u32
+    hash(char* str, memsize len)
+    {
+        u32 hash = 5381;
+        int c = 0;
+
+        for(memsize i = 0; i < len; ++i)
+        {
+        	c = *str++;
             hash = ((hash << 5) + hash) + c;
         }
 

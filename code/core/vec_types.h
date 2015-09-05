@@ -3,7 +3,7 @@ struct Vec2
 	f32 x, y;
 	f32 operator[](int i) 
 	{
-		ASSERT(i == 0 || i == 1); 
+		ASSERT(i == 0 || i == 1, "Invalid Vector2 index"); 
 		return (&x)[i]; 
 	}
 };
@@ -13,7 +13,7 @@ struct Vec2i
 	i32 x, y;
 	i32 operator[](int i) 
 	{
-		ASSERT(i == 0 || i == 1);
+		ASSERT(i == 0 || i == 1, "Invalid Vec2i index");
 		return (&x)[i]; 
 	}
 };
@@ -23,7 +23,7 @@ struct Vec3
 	f32 x, y, z;
 	f32 operator[](int i) 
 	{ 
-		ASSERT(i > -1 && i < 4); 
+		ASSERT(i > -1 && i < 4, "Invalid Vector3 index"); 
 		return (&x)[i]; 
 	}
 };
@@ -46,7 +46,7 @@ struct Quat
 	f32 x, y, z, w;
 	f32 operator[](int i) 
 	{
-		ASSERT(i > -1 && i < 5);  
+		ASSERT(i > -1 && i < 5, "Invalid Quaternion index");  
 		return (&x)[i]; 
 	}
 };

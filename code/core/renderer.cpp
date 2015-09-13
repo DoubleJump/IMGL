@@ -6,6 +6,7 @@ namespace renderer
 		Rect view;
 		Shader* shader;
 		Mesh* screen_mesh;
+		//Mesh* sphere;
 		Texture* texture;
 		Target* target;
 	};

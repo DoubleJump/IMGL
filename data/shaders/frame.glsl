@@ -18,14 +18,9 @@ void main()
 #version 330
 
 uniform sampler2D diffuse;
-uniform float alpha;
-
 in vec2 _uv;
-
 out vec4 result;
-
 void main()
 {
-	result = texture(diffuse, _uv) * alpha;
-	//result = vec4(0.5,0.2,0.8,1.0);
+	result = texture(diffuse, _uv);
 }

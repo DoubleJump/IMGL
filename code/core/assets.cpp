@@ -31,8 +31,7 @@ namespace asset
 		#if DEBUG
 			if(!found) 
 			{
-				printf("Could not find shader: %s \n", name);
-				FAIL;
+				FAIL("Could not find shader: %s \n", name);
 			}
 		#endif
 		return s;
@@ -49,9 +48,9 @@ namespace asset
 		assets.num_meshes = file::read_i32(&asset_file);
 		assets.num_textures = file::read_i32(&asset_file);
 
-		assets.shaders = push_array(storage, Shader, assets.num_shaders);
-		assets.meshes = push_array(storage, Mesh, assets.num_meshes);
-		assets.textures = push_array(storage, Texture, assets.num_textures);
+		assets.shaders = alloc_array(storage, Shader, assets.num_shaders);
+		assets.meshes = alloc_array(storage, Mesh, assets.num_meshes);
+		assets.textures = alloc_array(storage, Texture, assets.num_textures);
 
 		auto s = &(assets.shaders[0]);
 		for(u32 i = 0; i < assets.num_shaders; ++i)
@@ -76,7 +75,7 @@ namespace asset
 			m->index_count = file::read_i32(&asset_file);
 			m->attribute_mask = file::read_i32(&asset_file);
 
-			mesh::alloc_array_buffers(m, storage);
+			mesh::alloc_array_buffers(storage, m);
 
 			m->linked = false;
 			m->dirty = true;

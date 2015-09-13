@@ -32,11 +32,11 @@ struct string
 	char* data;
 };
 
-#if BUILD_DEBUG
-#define FAIL(expr) printf(expr); printf("Error in file: %s line: %d \n ", __FILE__, __LINE__ ); *(int*)0 = 0;
-#define ASSERT(expr, msg) if(!(expression)) { FAIL(msg) } 
+#if DEBUG
+#define FAIL(expr, ...) printf(expr, __VA_ARGS__); printf("Error in file: %s line: %d \n ", __FILE__, __LINE__ ); *(int*)0 = 0;
+#define ASSERT(expr, msg, ...) if(!(expr)) { FAIL(msg, __VA_ARGS__); } 
 #else
-#define FAIL
+#define FAIL(expr)
 #define ASSERT(expr, msg)
 #endif
 

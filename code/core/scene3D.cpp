@@ -1,29 +1,30 @@
 struct Entity
 {
 	i32 id;
-	b32 active;
-	b32 dirty;
-	Vec2 position;
-	Vec2 scale;
-	f32 rotation;
-	Mat4 local_matrix;
-	Mat4 world_matrix;
 	i32 parent;
 	i32 children[8];
+	b32 active;
+	b32 dirty;
+	Vec3 position;
+	Vec3 scale;
+	Quat rotation;
+	Mat4 local_matrix;
+	Mat4 world_matrix;
 };
 
 namespace camera
 {
 	enum Projection
 	{
-		ORTHO: 0,
-		PROJECTION: 1
+		ORTHO = 0,
+		PERSPECTIVE = 1
 	};
 }
 
 struct Camera
 {
-	Entity entity;
+	i32 id;
+	Entity* entity;
 	camera::Projection projection_type;
 	Mat4 projection;
 	Mat4 view;
@@ -45,28 +46,28 @@ namespace camera
 		c->aspect = view.width / view.height;
 
 		auto& m = c->projection;
-		if(c.projection_type == camera::Projection::ORTHO)
+		if(c->projection_type == camera::Projection::ORTHO)
 		{
-			m[ 0] = 2.0f / view.width;
-			m[ 5] = 2.0f / view.height;
-			m[10] = -2.0f / (c->far - c->near);
-			m[14] = 0.0f;
-			m[15] = 1.0f;	
+			m.m[ 0] = 2.0f / view.width;
+			m.m[ 5] = 2.0f / view.height;
+			m.m[10] = -2.0f / (c->far - c->near);
+			m.m[14] = 0.0f;
+			m.m[15] = 1.0f;	
 		}
 		else
 		{
-			auto h = 1.0f / tanf(c->fov * math::PI_OVER_360);
+			auto h = 1.0f / tanf(c->fov * PI_OVER_360);
 			auto y = c->near - c->far;
 			
-			m[ 0] = h / c->aspect;
-			m[ 5] = h;
-			m[10] = (c->far + c->near) / y;
-			m[11] = -1.0f;
-			m[14] = 2.0f * (c->near * c->far) / y;
-			m[15] = 0.0f;
+			m.m[ 0] = h / c->aspect;
+			m.m[ 5] = h;
+			m.m[10] = (c->far + c->near) / y;
+			m.m[11] = -1.0f;
+			m.m[14] = 2.0f * (c->near * c->far) / y;
+			m.m[15] = 0.0f;
 		}
 		c->dirty = false;
-	},
+	}
 
 	fn void
 	set_clip_range(Camera* c, f32 near, f32 far)
@@ -74,7 +75,7 @@ namespace camera
 		c->near = near;
 		c->far = far;
 		c->dirty = true;
-	},
+	}
 }
 
 struct Scene
@@ -99,22 +100,29 @@ namespace scene
 	fn Entity*
 	get_entity(i32 id)
 	{
-		ASSERT(id >= 0 && id <= scene::ctx->num_entities);
+		ASSERT(id >= 0 && id <= scene::ctx->num_entities, "%i is an invalid entity id\n", id);
 		return &(scene::ctx->entities[id]);
+	}
+
+	fn Camera*
+	get_camera(i32 id)
+	{
+		ASSERT(id >= 0 && id <= scene::ctx->num_cameras, "%i is an invalid entity id\n", id);
+		return &(scene::ctx->cameras[id]);
 	}
 
 	fn Entity*
 	new_entity()
 	{
-		i32 num_entities = scene::ctx->num_entities;
+		u32 num_entities = scene::ctx->num_entities;
 		auto e = get_entity(num_entities);
 		e->id = num_entities;
 		e->parent = 0;
 		e->active = true;
 		e->dirty = true;
-		e->position = {0,0};
-		e->scale = {1,1};
-		e->rotation = 0;
+		e->position = {0,0,0};
+		e->scale = {1,1,1};
+		e->rotation = quat::identity;
 
 		for(i32 i = 0; i < 8; ++i)
 		{
@@ -126,19 +134,45 @@ namespace scene
 		return e;
 	}
 
-	fn Scene* 
-	new_scene(memory::Block* storage, i32 entity_count)
+	fn Camera*
+	new_camera()
 	{
-		auto s = push_struct(storage, Scene);
+		u32 num_cameras = scene::ctx->num_cameras;
+		auto c = get_camera(num_cameras);
+
+		c->id = num_cameras;
+		c->entity = scene::new_entity();
+		c->projection_type = camera::Projection::PERSPECTIVE;
+		c->projection = mat4::identity;
+		c->view = mat4::identity;
+		c->view_projection = mat4::identity;
+		c->normal = mat3::identity;
+		c->mask = 0;
+		c->dirty = true;
+		c->aspect = 1.0f;
+		c->near = 0.01f;
+		c->far = 100.0f;
+		c->fov = 60.0f;
+
+		return c;
+	}
+
+	fn Scene* 
+	new_scene(memory::Block* storage, i32 entity_count, i32 camera_count)
+	{
+		auto s = alloc_struct(storage, Scene);
 		s->num_entities = 0;
-		s->entities = push_array(storage, Entity, entity_count);
+		s->entities = alloc_array(storage, Entity, entity_count);
+		s->num_cameras = 0;
+		s->cameras = alloc_array(storage, Camera, camera_count);
 		scene::set_context(s);
 		scene::new_entity();
+		scene::new_camera();
 		return s;
 	}
 
 	fn void 
-	set_transform(Entity* e, Vec2 position, Vec2 scale, f32 rotation)
+	set_transform(Entity* e, Vec3 position, Vec3 scale, Quat rotation)
 	{
 		e->position = position;
 		e->scale = scale;
@@ -217,9 +251,6 @@ namespace scene
 		e->dirty = false;
 	}
 	
-
-
-
 	fn void
 	update()
 	{
@@ -239,12 +270,12 @@ namespace scene
 	world_to_screen(Camera* c, Vec3 world, Rect view)
     {
     	Vec3 result;
-        Vec3 wp = mat4::mul_projection(camera->view_projection, world);
+        Vec3 wp = mat4::mul_projection(c->view_projection, world);
         result.x = ((wp.x + 1.0f) / 2.0f) * view.width;
         result.y = ((1.0f - wp.y) / 2.0f) * view.height;
         result.z = world.z;
         return result;
-    },
+    }
 
 	fn Vec3
     screen_to_view(Vec3 point, Rect view)
@@ -254,7 +285,7 @@ namespace scene
         result.y = 1.0f - (point.y / view.height);
         result.z = point.z;
         return result;
-    },
+    }
 
 	fn Vec3
     screen_to_world(Camera* c, Vec3 point, Rect view)
@@ -264,7 +295,7 @@ namespace scene
         t.y = -2.0f * point.y / view.height + 1.0f;
         t.z = point.z;
             
-        auto inverse = mat4::inverse(camera.view_projection);
-        return mat4::mul_projection(inv, t);
-    },
+        auto inverse = mat4::inverse(c->view_projection);
+        return mat4::mul_projection(inverse, t);
+    }
 }

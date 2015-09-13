@@ -20,7 +20,7 @@ def compile_texture_file(name, file_type, src_file, writer):
 
 def compile_mesh_file(name, src_file, writer):	
 	b = src_file.read()
-	write_str(writer, name)
+	write_string(writer, name)
 	write_bytes(writer, b)
 	return True
 
@@ -33,7 +33,6 @@ def compile_shader_file(name, src_file, writer):
 	fragment_src = ""
 
 	for line in src_file:
-		#print line
 		if read_state == 0:
 			if line == "#VERTEX\n":
 				vertex_shader_found = True
@@ -129,13 +128,15 @@ def main(argv = None):
 	write_int(writer, len(meshes))
 	write_int(writer, len(textures))
 
+	print ''
+
 	for s in shaders:
 		src = open(s.path, "r")
 		if not compile_shader_file(s.name, src, writer):
 			print "Error compiling shader: " + s.name + " ... exiting"
 			src.close()
 			break
-		print "Compiled shader: " + s.name
+		print "Compiled Shader: " + s.name
 		src.close()
 
 	for m in meshes:
@@ -144,7 +145,7 @@ def main(argv = None):
 			print "Error compiling mesh: " + m.name + " ... exiting"
 			src.close()
 			break
-		print "Compiled mesh: " + m.name
+		print "Compiled Mesh: " + m.name
 		src.close()
 
 	for t in textures:
@@ -153,7 +154,7 @@ def main(argv = None):
 			print "Error compiling texture: " + t.name + " ... exiting"
 			src.close()
 			break
-		print "Compiled texture: " + t.name
+		print "Compiled Texture: " + t.name
 		src.close()
 
 	writer.target.close()

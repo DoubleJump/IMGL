@@ -50,7 +50,7 @@ namespace renderer
 		fn Texture*
 		create(memory::Block* storage, i32 width, i32 height, texture::Format format, Sampler sampler)
 		{
-			auto t = push_struct(storage, Texture);
+			auto t = alloc_struct(storage, Texture);
 			t->width = width;
 			t->height = height; 
 			t->format = format;
@@ -95,7 +95,7 @@ namespace renderer
 			s.wrap_y = texture::WrapMode::CLAMP;
 
 			auto t = create(storage, width, height, texture::Format::RGBA, s);
-			t->pixels = push_array(storage, u8, t->width * t->height * t->bytes_per_pixel);
+			t->pixels = alloc_array(storage, u8, t->width * t->height * t->bytes_per_pixel);
 			return t;
 		}
 	}

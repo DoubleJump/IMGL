@@ -1,4 +1,6 @@
-#define _CRT_SECURE_NO_WARNINGS
+#if DEBUG
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 #include "../core/compilers.h"
 #include "../core/typedefs.h"
@@ -6,17 +8,18 @@
 #include <stdio.h>
 
 #include "../core/memory.cpp"
+#include "../core/input.cpp"
 #include "../core/math.cpp"
 #include "../core/vec_types.h"
-#include "../core/mat3.cpp"
 #include "../core/vec2.cpp"
 #include "../core/vec2i.cpp"
 #include "../core/vec3.cpp"
 #include "../core/color.cpp"
 #include "../core/quat.cpp"
+#include "../core/mat3.cpp"
+#include "../core/mat4.cpp"
 #include "../core/random.cpp"
 #include "../core/rect.cpp"
-#include "../core/input.cpp"
 #include "../core/texture.cpp"
 #include "../core/shader.cpp"
 #include "../core/mesh.cpp"
@@ -26,7 +29,8 @@
 #include "../core/platform.h"
 
 #include "../core/assets.cpp"
-#include "../demos/diamond.cpp"
+//#include "../demos/diamond.cpp"
+#include "../demos/fizix.cpp"
 
 #include <windows.h>
 #include "fileio.cpp"
@@ -200,7 +204,7 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	//HIDE CURSOR
 	ShowCursor(FALSE);
 
-	// ALLOCATE app MEMORY
+	// ALLOCATE MEMORY
 	
 	#if DEBUG
 		LPVOID base_address = (LPVOID)TERABYTES(2);
@@ -208,14 +212,15 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 		LPVOID base_address = 0;
 	#endif
 
+	memsize virtual_memory_size = MEGABYTES(32);
+	auto virtual_memory = VirtualAlloc(base_address, virtual_memory_size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
 
 	memory::Block storage = {};
-	storage.used = 0;
-	storage.size = MEGABYTES(32);
-	storage.base = VirtualAlloc(base_address, storage.size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+	memory::set_block(&storage, base_address, virtual_memory_size, memory::BlockType::HEAP, 8);
+
 
 	// PLATFORM
-	auto platform = push_struct(&storage, Platform);
+	auto platform = alloc_struct(&storage, Platform);
  	platform->storage = &storage;
 
 	// TIMING
@@ -246,19 +251,19 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 
 	// INIT INPUT
 
-	platform->devices = push_struct(&storage, input::Devices);
-	//auto devices = push_struct(&storage, input::Devices);
+	platform->devices = alloc_struct(&storage, input::Devices);
+	//auto devices = alloc_struct(&storage, input::Devices);
 
 	// INIT OPENGL
 
-	platform->render_state = push_struct(&storage, renderer::State);
+	platform->render_state = alloc_struct(&storage, renderer::State);
 	platform->render_state->storage = &storage;
 	platform->render_state->view = { 0,0, (f32)X_RES, (f32)Y_RES };
  	opengl::create_context(platform->render_state, device_context);
  	
  	// INIT APP
 	
- 	app::State* app_state = push_struct(&storage, app::State);
+ 	app::State* app_state = alloc_struct(&storage, app::State);
  	app::init(platform, app_state);
 
 	// MAIN LOOP
@@ -376,7 +381,6 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR command_line, int sho
 	
 		platform->time.dt = target_seconds_per_frame;
 		platform->time.elapsed += target_seconds_per_frame;
-		//platform->time.elapsed = app_time;
 		app::update(platform, app_state);
 	
 		auto work_seconds = get_seconds_elapsed(last_ticks, get_current_ticks());				

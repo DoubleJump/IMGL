@@ -22,10 +22,11 @@ namespace opengl
 			{
 				GLint log_length = 0;
 				glGetShaderiv(vert_shader, GL_INFO_LOG_LENGTH, &log_length);
-				auto error_log = push_array(storage, GLchar, log_length);
+				auto error_log = alloc_array(storage, GLchar, log_length);
 				glGetShaderInfoLog(vert_shader, log_length, &log_length, error_log);
-				printf(error_log);
-				FAIL("Vertex shader compile error");
+				printf("## VERTEX SHADER ERROR ## \n");
+				puts(s->vertex_src.data);
+				FAIL(error_log);
 			}
 		}
 		#endif
@@ -42,10 +43,11 @@ namespace opengl
 			{
 				GLint log_length = 0;
 				glGetShaderiv(frag_shader, GL_INFO_LOG_LENGTH, &log_length);
-				auto error_log = push_array(storage, GLchar, log_length);
+				auto error_log = alloc_array(storage, GLchar, log_length);
 				glGetShaderInfoLog(frag_shader, log_length, &log_length, error_log);
-				printf(error_log);
-				FAIL("Fragment shader compile error");
+				printf("## FRAGMENT SHADER ERROR ## \n");
+				puts(s->fragment_src.data);
+				FAIL(error_log);
 			}
 		}
 		#endif
@@ -63,10 +65,10 @@ namespace opengl
 			{
 				GLint log_length = 0;
 				glGetProgramiv(frag_shader, GL_INFO_LOG_LENGTH, &log_length);
-				auto error_log = push_array(storage, GLchar, log_length);
+				auto error_log = alloc_array(storage, GLchar, log_length);
 				glGetProgramInfoLog(program, log_length, &log_length, error_log);
-				printf(error_log);
-				FAIL("Shader link error");
+				printf("## SHADER LINK ERROR ## \n");
+				FAIL(error_log);
 			}
 		}
 		#endif
@@ -87,8 +89,8 @@ namespace opengl
 	    //printf("Shader Attributes: %i \n", s->num_attributes);  
 	    //printf("Shader Uniforms: %i \n", s->num_uniforms);
 
-	    //s->attributes = push_array(storage, shader::Attribute, s->num_attributes);
-	    s->uniforms = push_array(storage, shader::Uniform, s->num_uniforms);
+	    //s->attributes = alloc_array(storage, shader::Attribute, s->num_attributes);
+	    s->uniforms = alloc_array(storage, shader::Uniform, s->num_uniforms);
 
 	    char name[256];
 	    GLsizei name_len;
@@ -103,7 +105,7 @@ namespace opengl
 	    	uniform->name = math::hash(&name[0], name_len);
 	    	uniform->location = i;
 	    	uniform->dirty = false;
-	    	uniform->value = push_bytes(storage, size * 4);
+	    	uniform->value = memory::alloc(storage, size * 4);
 
 	    	//TODO: add the rest of the data types
 	    	switch(type)
@@ -539,7 +541,7 @@ namespace opengl
 		// FRAME BUFFER TEXTURE
 
 		/*
-		state->render_target = push_struct(storage, Target);
+		state->render_target = alloc_struct(storage, Target);
 		auto color_target = texture::create_pixel_buffer(storage, (i32)state->view.width, (i32)state->view.height);
 
 		link(color_target);
@@ -549,7 +551,7 @@ namespace opengl
 
 		// FRAME BUFFER SHADER
 		/*
-		state->render_target->shader = push_struct(storage, Shader);
+		state->render_target->shader = alloc_struct(storage, Shader);
 		{
 			auto vert_file = file::open(state->thread, "..\\data\\frame.vert");
 			auto vert_source = (const char*)vert_file.contents;

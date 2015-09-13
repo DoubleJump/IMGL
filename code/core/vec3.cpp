@@ -35,6 +35,12 @@ operator * (Vec3 a, f32 f)
 }
 
 fn Vec3 
+operator * (f32 f, Vec3 a)
+{
+	return { a.x * f, a.y * f, a.z * f };
+}
+
+fn Vec3 
 operator / (Vec3 a, f32 f)
 {
 	return { a.x / f, a.y / f, a.z / f };

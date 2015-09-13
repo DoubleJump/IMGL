@@ -270,7 +270,7 @@ namespace mat4
 			}
 		}
 
-		q *= 0.5f / sqrt(t);
+		q *= 0.5f / sqrtf(t);
 	}
 
 	fn Mat4

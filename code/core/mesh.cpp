@@ -123,7 +123,7 @@ namespace renderer
 		}
 
 		fn Mesh*
-		alloc_array_buffers(Mesh* m, memory::Block* storage)
+		alloc_array_buffers(memory::Block* storage, Mesh* m)
 		{
 			m->positions = 0;
 			m->normals 	 = 0;
@@ -169,7 +169,7 @@ namespace renderer
 
 			memsize index_bytes = sizeof(u16) * m->index_count;
 
-			m->memory = memory::push_bytes(storage, vertex_bytes + index_bytes);
+			m->memory = memory::alloc(storage, vertex_bytes + index_bytes);
 			m->vertex_array_size = vertex_bytes;
 			m->index_array_size = index_bytes;
 
@@ -211,7 +211,7 @@ namespace renderer
 			auto mask = VertexAttribute::POSITION |
 						VertexAttribute::UV;
 
-			auto m = push_struct(storage, Mesh);
+			auto m = alloc_struct(storage, Mesh);
 			m->vertex_count = 4;
 			m->index_count = 6;
 			m->draw_type = mesh::DrawType::TRIANGLES;
@@ -219,7 +219,7 @@ namespace renderer
 			m->attribute_mask = VertexAttribute::POSITION |
 								VertexAttribute::UV;
 
-			mesh::alloc_array_buffers(m, storage);
+			mesh::alloc_array_buffers(storage, m);
 			mesh::set_data(m, &verts[0], &indices[0]);
 
 			m->linked = false;

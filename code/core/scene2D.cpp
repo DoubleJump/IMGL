@@ -32,7 +32,7 @@ namespace scene
 	fn Entity*
 	get_entity(i32 id)
 	{
-		ASSERT(id >= 0 && id <= scene::ctx->num_entities, ("%i is not a valid entity id", id));
+		ASSERT(id >= 0 && id <= scene::ctx->num_entities, "%i is not a valid entity id", id);
 		return &(scene::ctx->entities[id]);
 	}
 

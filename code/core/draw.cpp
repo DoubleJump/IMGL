@@ -19,7 +19,7 @@ namespace draw
 	fn Context* 
 	new_context(memory::Block* storage, renderer::State* render_state)
 	{
-		auto c = push_struct(storage, Context);
+		auto c = alloc_struct(storage, Context);
 		c->render_state = render_state;
 		c->color = { 0,0,0,255 };
 		c->transform = mat3::identity;
